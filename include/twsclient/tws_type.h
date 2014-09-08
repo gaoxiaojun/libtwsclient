@@ -16,11 +16,14 @@ typedef enum {
   TWS_ST_READY,   /* now the client ready for command */
 } tws_client_state;
 
+typedef void (*tws_logger)(const char *fmt, ...);
+
 #define TWS_CLIENT_PUBLIC_FIELDS \
     void *data;                 \
     tws_client_state state;     \
     int serverVersion;          \
-    int clientId;
+    int clientId;               \
+    tws_logger logger;
 
 typedef struct tws_client_s {
     TWS_CLIENT_PUBLIC_FIELDS

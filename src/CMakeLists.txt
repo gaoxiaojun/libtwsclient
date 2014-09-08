@@ -5,8 +5,8 @@ file(GLOB LIB_TWS_CLIENT_SOURCE *.c)
 add_library(twsclient SHARED ${LIB_TWS_CLIENT_SOURCE})
 add_library(twsclient_static STATIC ${LIB_TWS_CLIENT_SOURCE})
 
-target_link_libraries(twsclient ${LIBUV_LIBRARIES} ${JEMALLOC_LIBRARIES} ${ZLOG_LIBRARIES})
-target_link_libraries(twsclient_static ${LIBUV_LIBRARIES} ${JEMALLOC_LIBRARIES} ${ZLOG_LIBRARIES})
+target_link_libraries(twsclient ${LIBUV_LIBRARIES} ${JEMALLOC_LIBRARIES})
+target_link_libraries(twsclient_static ${LIBUV_LIBRARIES} ${JEMALLOC_LIBRARIES})
 
 set_target_properties(twsclient PROPERTIES VERSION ${LIBTWSCLIENT_VERSION} SOVERSION ${LIBTWSCLIENT_PATCH})
 set_target_properties(twsclient PROPERTIES CLEAN_DIRECT_OUTPUT 1)

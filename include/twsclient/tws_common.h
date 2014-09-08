@@ -104,12 +104,6 @@ extern "C" {
 #define ascii_strncasecmp(x,y,z) strncasecmp(x,y,z)
 #endif
 
-#ifdef USE_ZLOG
-#define LOG_ERR dzlog_error
-#else
-#define LOG_ERR printf
-#endif
-
 #ifdef __cplusplus
 }
 #endif

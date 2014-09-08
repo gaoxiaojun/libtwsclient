@@ -67,9 +67,6 @@ include_directories(SYSTEM ${LIBUV_INCLUDE_DIRS})
 find_package(Jemalloc)
 include_directories(SYSTEM ${JEMALLOC_INCLUDE_DIRS})
 
-find_package(Zlog)
-include_directories(SYSTEM ${ZLOG_INCLUDE_DIRS})
-
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/include)
 
 if (CMAKE_C_COMPILER_ID STREQUAL "MSVC")
