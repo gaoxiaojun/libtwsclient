@@ -25,7 +25,7 @@ void on_write_cb(uv_write_t* req, int status)
     real_client_t *client = req->data;
     tws_client_generical_cb *cb = (tws_client_generical_cb *)((uv_buf_t *)(req + 1) + 1);
 
-    free(req);
+    sk_free(req);
     if (status < 0) {
         if (client->logger)
             client->logger("Error[%d]:%s\n", status, uv_strerror(status));
@@ -131,7 +131,7 @@ static void on_close_cb(uv_handle_t* handle)
     client->state = TWS_ST_CLOSED;
 
     if (client->free_flag) {
-        free(client);
+        sk_free(client);
         return;
     }
 
@@ -193,7 +193,7 @@ static void _client_reconnect_start(real_client_t *client)
 
 tws_client_t * tws_client_new(uv_loop_t *loop, tws_event_callback cb)
 {
-    real_client_t *client = calloc(sizeof(struct real_client_s), 1);
+    real_client_t *client = sk_calloc(sizeof(struct real_client_s), 1);
 
     if (client) {
         client->serverVersion = 0;
@@ -257,7 +257,7 @@ void tws_client_destroy(tws_client_t *c)
      if (TWS_ST_CLOSED != client->state) {
          tws_client_stop((tws_client_t *)client);
      } else {
-         free(client);
+         sk_free(client);
      }
 }
 

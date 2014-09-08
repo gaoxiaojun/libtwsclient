@@ -9,6 +9,7 @@ extern void tws_debug(tws_client_t *client, int event_type, void *ud);
 
 void sig_int_cb(uv_signal_t *handle, int signum)
 {
+    printf("user interrupt\n");
     uv_signal_stop(handle);
     uv_stop(uv_default_loop());
 }
@@ -52,5 +53,6 @@ int main(int argc, char **argv)
 
     tws_client_destroy(client);
 
+    printf("exit...\n");
     return 0;
 }

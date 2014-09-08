@@ -165,7 +165,7 @@ static char receive_position(real_client_t *client, char *token)
 
         /* free */
         tws_destroy_contract(ud.contract);
-
+        sk_free(ud.contract);
     PEND;
 }
 #undef ud
@@ -193,10 +193,10 @@ static char receive_account_summary(real_client_t *client, char *token)
 
         CALLBACK(ACCOUNT_SUMMARY);
         /* free */
-        free(ud.account);
-        free(ud.tag);
-        free(ud.value);
-        free(ud.currency);
+        sk_free(ud.account);
+        sk_free(ud.tag);
+        sk_free(ud.value);
+        sk_free(ud.currency);
     PEND;
 }
 #undef ud
@@ -287,7 +287,7 @@ static char receive_tick_string(real_client_t *client, char *token)
 
         CALLBACK(TICK_STRING);
 
-        free(ud.value);
+        sk_free(ud.value);
     PEND;
 }
 #undef ud
@@ -309,8 +309,8 @@ static char receive_tick_efp(real_client_t *client, char *token)
 
         CALLBACK(TICK_EFP);
 
-        free(ud.formatteBasisPoints);
-        free(ud.futureExpiry);
+        sk_free(ud.formatteBasisPoints);
+        sk_free(ud.futureExpiry);
     PEND;
 }
 #undef ud
@@ -350,8 +350,8 @@ static char receive_order_status(real_client_t *client, char *token)
         CALLBACK(ORDER_STATUS);
 
         /* free */
-        free(ud.status);
-        free(ud.whyHeld);
+        sk_free(ud.status);
+        sk_free(ud.whyHeld);
     PEND;
 }
 #undef ud
@@ -372,7 +372,7 @@ static char receive_acct_value(real_client_t *client, char *token)
 
         CALLBACK(ACCT_VALUE);
 
-        free(ud.accoutName);
+        sk_free(ud.accoutName);
     PEND;
 }
 #undef ud
@@ -424,7 +424,9 @@ static char receive_portfolio_value(real_client_t *client, char *token)
         CALLBACK(PORTFOLIO_VALUE);
 
         tws_destroy_contract(ud.contract);
-        free(ud.accountName);
+        sk_free(ud.contract);
+
+        sk_free(ud.accountName);
     PEND;
 }
 #undef ud
@@ -438,7 +440,7 @@ static char receive_acct_update_time(real_client_t *client, char *token)
 
         CALLBACK(ACCT_UPDATE_TIME);
 
-        free(ud.timeStamp);
+        sk_free(ud.timeStamp);
     PEND;
 }
 #undef ud
@@ -460,7 +462,7 @@ static char receive_err_msg(real_client_t *client, char *token)
 
         CALLBACK(ERR_MSG);
 
-        free(ud.errorMsg);
+        sk_free(ud.errorMsg);
     PEND;
 }
 #undef ud
@@ -622,11 +624,9 @@ static char receive_open_order(real_client_t *client, char *token)
         if (client->event.version >= 29) {
             YIELD; ud.contract->comboLegsCount = RINT;
             if (ud.contract->comboLegsCount > 0) {
-                ud.contract->comboLegs = (tr_comboleg_t *)calloc(sizeof(tr_comboleg_t),
+                ud.contract->comboLegs = (tr_comboleg_t *)sk_calloc(sizeof(tr_comboleg_t),
                                                                    ud.contract->comboLegsCount);
                 for (client->event.j = 0; client->event.j < ud.contract->comboLegsCount; client->event.j++) {
-                    tws_init_tr_comboleg(&ud.contract->comboLegs[client->event.j]);
-
                     YIELD; ud.contract->comboLegs[client->event.j].conId = RINT;
                     YIELD; ud.contract->comboLegs[client->event.j].ratio = RINT;
                     YIELD; ud.contract->comboLegs[client->event.j].action = RSTRING;
@@ -640,10 +640,9 @@ static char receive_open_order(real_client_t *client, char *token)
 
             YIELD; ud.order->comboLegsCount = RINT;
             if (ud.order->comboLegsCount > 0) {
-                ud.order->comboLegs = (tr_order_combo_leg_t *)calloc (sizeof(tr_order_combo_leg_t),
+                ud.order->comboLegs = (tr_order_combo_leg_t *)sk_calloc (sizeof(tr_order_combo_leg_t),
                                                                           ud.order->comboLegsCount);
                 for (client->event.j = 0; client->event.j < ud.order->comboLegsCount; client->event.j++) {
-                    tws_init_order_combo_leg(&ud.order->comboLegs[client->event.j]);
                     YIELD; ud.order->comboLegs[client->event.j].price = RDOUBLEMAX;
                 }
             }
@@ -652,7 +651,7 @@ static char receive_open_order(real_client_t *client, char *token)
         if (client->event.version >= 26) {
             YIELD; ud.order->smartComboRoutingParamsCount = RINT;
             if (ud.order->smartComboRoutingParamsCount > 0) {
-                ud.order->smartComboRoutingParams  = (tr_tag_value_t*)calloc(sizeof(tr_tag_value_t),
+                ud.order->smartComboRoutingParams  = (tr_tag_value_t*)sk_calloc(sizeof(tr_tag_value_t),
                                          ud.order->smartComboRoutingParamsCount);
                 for (client->event.j = 0; client->event.j < ud.order->smartComboRoutingParamsCount; client->event.j++) {
                     YIELD; ud.order->smartComboRoutingParams[client->event.j].tag = RSTRING;
@@ -705,7 +704,6 @@ static char receive_open_order(real_client_t *client, char *token)
         if (client->event.version >= 20) {
             YIELD; if (RBOOL) {
                 ud.contract->underComp = sk_malloc(sizeof(under_comp_t));
-                tws_init_under_comp(ud.contract->underComp);
                 YIELD; ud.contract->underComp->conId = RINT;
                 YIELD; ud.contract->underComp->delta = RDOUBLE;
                 YIELD; ud.contract->underComp->price = RDOUBLE;
@@ -717,7 +715,7 @@ static char receive_open_order(real_client_t *client, char *token)
             if (!IS_EMPTY(ud.order->algoStrategy)) {
                 YIELD; ud.order->algoParamsCount = RINT;
                 if (ud.order->algoParamsCount > 0) {
-                    ud.order->algoParams = calloc(sizeof(tr_tag_value_t),
+                    ud.order->algoParams = sk_calloc(sizeof(tr_tag_value_t),
                                                    ud.order->algoParamsCount);
                     for (client->event.j = 0; client->event.j < ud.order->algoParamsCount; client->event.j++) {
                         YIELD; ud.order->algoParams[client->event.j].tag = RSTRING;
@@ -744,6 +742,9 @@ static char receive_open_order(real_client_t *client, char *token)
         tws_destroy_contract(ud.contract);
         tws_destroy_order(ud.order);
         tws_destroy_order_state(ud.orderState);
+        sk_free(ud.contract);
+        sk_free(ud.order);
+        sk_free(ud.orderState);
     PEND;
 }
 #undef ud
@@ -767,7 +768,7 @@ static char receive_scanner_data(real_client_t *client, char *token)
         YIELD; ud.tickerId = RINT;
         YIELD; ud.numberOfElements = RINT;
         if (ud.numberOfElements > 0) {
-            ud.elements = calloc(sizeof(event_scanner_data_item_t), ud.numberOfElements);
+            ud.elements = sk_calloc(sizeof(event_scanner_data_item_t), ud.numberOfElements);
             for (client->event.j = 0; client->event.j < ud.numberOfElements; client->event.j++) {
                 tws_init_contract_details(ud.elements[client->event.j].contractDetails);
                 YIELD; ud.elements[client->event.j].rank = RINT;
@@ -798,11 +799,12 @@ static char receive_scanner_data(real_client_t *client, char *token)
         /* free */
         for (client->event.j = 0; client->event.j < ud.numberOfElements; client->event.j++) {
             tws_destroy_contract_details(ud.elements[client->event.j].contractDetails);
-            free(ud.elements[client->event.j].distance);
-            free(ud.elements[client->event.j].benchmark);
-            free(ud.elements[client->event.j].projection);
-            free(ud.elements[client->event.j].legsStr);
+            sk_free(ud.elements[client->event.j].distance);
+            sk_free(ud.elements[client->event.j].benchmark);
+            sk_free(ud.elements[client->event.j].projection);
+            sk_free(ud.elements[client->event.j].legsStr);
         }
+        sk_free(ud.elements);
     PEND;
 }
 #undef ud
@@ -866,7 +868,7 @@ static char receive_contract_data(real_client_t *client, char *token)
         if (client->event.version >= 7) {
             YIELD; ud.contractDetails->secIdListCount = RINT;
             if (ud.contractDetails->secIdListCount > 0) {
-                ud.contractDetails->secIdList = calloc(sizeof(tr_tag_value_t),
+                ud.contractDetails->secIdList = sk_calloc(sizeof(tr_tag_value_t),
                                                         ud.contractDetails->secIdListCount);
                 for (client->event.j = 0; client->event.j < ud.contractDetails->secIdListCount; client->event.j++) {
                     YIELD; ud.contractDetails->secIdList[client->event.j].tag = RSTRING;
@@ -878,6 +880,7 @@ static char receive_contract_data(real_client_t *client, char *token)
         CALLBACK(CONTRACT_DATA);
 
         tws_destroy_contract_details(ud.contractDetails);
+        sk_free(ud.contractDetails);
     PEND;
 }
 #undef ud
@@ -937,7 +940,7 @@ static char receive_bond_contract_data(real_client_t *client, char *token)
         if (client->event.version >= 5) {
             YIELD; ud.contractDetails->secIdListCount = RINT;
             if (ud.contractDetails->secIdListCount > 0) {
-                ud.contractDetails->secIdList = calloc(sizeof(tr_tag_value_t),
+                ud.contractDetails->secIdList = sk_calloc(sizeof(tr_tag_value_t),
                                                         ud.contractDetails->secIdListCount);
                 for (client->event.j = 0; client->event.j < ud.contractDetails->secIdListCount; client->event.j++) {
                     ud.contractDetails->secIdList[client->event.j].tag = RSTRING;
@@ -949,6 +952,7 @@ static char receive_bond_contract_data(real_client_t *client, char *token)
         CALLBACK(BOND_CONTRACT_DATA);
 
         tws_destroy_contract_details(ud.contractDetails);
+        sk_free(ud.contractDetails);
     PEND;
 }
 #undef ud
@@ -1030,6 +1034,8 @@ static char receive_execution_data(real_client_t *client, char *token)
         /* free */
         tws_destroy_execution(ud.exec);
         tws_destroy_contract(ud.contract);
+        sk_free(ud.exec);
+        sk_free(ud.contract);
 
     PEND;
 }
@@ -1082,8 +1088,8 @@ static char receive_news_bulletions(real_client_t *client, char *token)
 
         CALLBACK(NEWS_BULLETINS);
 
-        free(ud.originationgExch);
-        free(ud.newsMessage);
+        sk_free(ud.originationgExch);
+        sk_free(ud.newsMessage);
     PEND;
 }
 #undef ud
@@ -1097,7 +1103,7 @@ static char receive_managed_accts(real_client_t *client, char *token)
 
         CALLBACK(MANAGED_ACCTS);
 
-        free(ud.acctList);
+        sk_free(ud.acctList);
     PEND;
 }
 #undef ud
@@ -1112,7 +1118,7 @@ static char receive_fa(real_client_t *client, char *token)
 
         CALLBACK(RECEIVE_FA);
 
-        free(ud.xml);
+        sk_free(ud.xml);
     PEND;
 }
 #undef ud
@@ -1130,7 +1136,7 @@ static char receive_historical_data(real_client_t *client, char *token)
         }
         YIELD; ud.itemCount = RINT;
         if (ud.itemCount > 0) {
-            ud.items = calloc(sizeof(event_historical_data_item_t), ud.itemCount);
+            ud.items = sk_calloc(sizeof(event_historical_data_item_t), ud.itemCount);
             for (client->event.j = 0; client->event.j < ud.itemCount; client->event.j++) {
                 YIELD; ud.items[client->event.j].date = RSTRING;
                 YIELD; ud.items[client->event.j].open = RDOUBLE;
@@ -1150,12 +1156,12 @@ static char receive_historical_data(real_client_t *client, char *token)
         CALLBACK(HISTORICAL_DATA);
 
         /* free */
-        free(ud.startDateStr);
-        free(ud.endDateStr);
+        sk_free(ud.startDateStr);
+        sk_free(ud.endDateStr);
         for (client->event.j = 0; client->event.j < ud.itemCount; client->event.j++) {
-            free(ud.items[client->event.j].date);
+            sk_free(ud.items[client->event.j].date);
         }
-        free(ud.items);
+        sk_free(ud.items);
 
     PEND;
 }
@@ -1170,7 +1176,7 @@ static char receive_scanner_parameters(real_client_t *client, char *token)
 
         CALLBACK(SCANNER_PARAMETERS);
 
-        free(ud.xml);
+        sk_free(ud.xml);
     PEND;
 }
 #undef ud
@@ -1217,7 +1223,7 @@ static char receive_fundamental_data(real_client_t *client, char *token)
 
         CALLBACK(FUNDAMENTAL_DATA);
 
-        free(ud.data);
+        sk_free(ud.data);
     PEND;
 }
 #undef ud
@@ -1253,7 +1259,7 @@ static char receive_acct_download_end(real_client_t *client, char *token)
 
         CALLBACK(ACCT_DOWNLOAD_END);
 
-        free(ud.accountName);
+        sk_free(ud.accountName);
     PEND;
 }
 #undef ud
@@ -1325,8 +1331,8 @@ static char receive_commission_report(real_client_t *client, char *token)
 
         CALLBACK(COMMISSION_REPORT);
 
-        free(ud.report.execId);
-        free(ud.report.currency);
+        sk_free(ud.report.execId);
+        sk_free(ud.report.currency);
     PEND;
 }
 #undef ud
@@ -1340,7 +1346,7 @@ static char receive_verify_message_api(real_client_t *client, char *token)
 
         CALLBACK(VERIFY_MESSAGE_API);
 
-        free(ud.apiData);
+        sk_free(ud.apiData);
     PEND;
 }
 #undef ud
@@ -1363,7 +1369,7 @@ static char receive_verify_completed(real_client_t *client, char *token)
 
         CALLBACK(VERIFY_COMPLETED);
 
-        free(ud.errorText);
+        sk_free(ud.errorText);
     PEND;
 }
 #undef ud
@@ -1378,7 +1384,7 @@ static char receive_display_group_list(real_client_t *client, char *token)
 
         CALLBACK(DISPLAY_GROUP_LIST);
 
-        free(ud.groups);
+        sk_free(ud.groups);
     PEND;
 }
 #undef ud
@@ -1393,7 +1399,7 @@ static char receive_display_group_updated(real_client_t *client, char *token)
 
         CALLBACK(DISPLAY_GROUP_UPDATED);
 
-        free(ud.contractInfo);
+        sk_free(ud.contractInfo);
     PEND;
 }
 #undef ud

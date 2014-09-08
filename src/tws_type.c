@@ -17,30 +17,30 @@ void tws_init_contract(tr_contract_t *c)
 
 void tws_destroy_contract(tr_contract_t *c)
 {
-    free(c->symbol);
-    free(c->secType);
-    free(c->expiry);
-    free(c->right);
-    free(c->multiplier);
-    free(c->exchange);
-    free(c->currency);
-    free(c->localSymbol);
-    free(c->tradingClass);
-    free(c->primaryExch);
-    free(c->secIdType);
-    free(c->secId);
-    free(c->comboLegsDescrip);
+    sk_free(c->symbol);
+    sk_free(c->secType);
+    sk_free(c->expiry);
+    sk_free(c->right);
+    sk_free(c->multiplier);
+    sk_free(c->exchange);
+    sk_free(c->currency);
+    sk_free(c->localSymbol);
+    sk_free(c->tradingClass);
+    sk_free(c->primaryExch);
+    sk_free(c->secIdType);
+    sk_free(c->secId);
+    sk_free(c->comboLegsDescrip);
 
     if (c->comboLegs && c->comboLegsCount) {
         for (int i = 0; i < c->comboLegsCount; i++) {
-            free(c->comboLegs[i].action);
-            free(c->comboLegs[i].exchange);
-            free(c->comboLegs[i].designatedLocation);
+            sk_free(c->comboLegs[i].action);
+            sk_free(c->comboLegs[i].exchange);
+            sk_free(c->comboLegs[i].designatedLocation);
         }
-        free(c->comboLegs);
+        sk_free(c->comboLegs);
     }
 
-    free(c->underComp);
+    sk_free(c->underComp);
 }
 
 void tws_init_order(tr_order_t *o)
@@ -91,63 +91,63 @@ void tws_init_order(tr_order_t *o)
 
 void tws_destroy_order(tr_order_t *o)
 {
-    free(o->action);
-    free(o->orderType);
-    free(o->tif);
-    free(o->activeStartTime);
-    free(o->activeStopTime);
-    free(o->ocaGroup);
-    free(o->orderRef);
-    free(o->goodAfterTime);
-    free(o->goodTillDate);
-    free(o->rule80A);
-    free(o->faGroup);
-    free(o->faProfile);
-    free(o->faPercentage);
-    free(o->faMethod);
-    free(o->openClose);
-    free(o->designatedLocation);
+    sk_free(o->action);
+    sk_free(o->orderType);
+    sk_free(o->tif);
+    sk_free(o->activeStartTime);
+    sk_free(o->activeStopTime);
+    sk_free(o->ocaGroup);
+    sk_free(o->orderRef);
+    sk_free(o->goodAfterTime);
+    sk_free(o->goodTillDate);
+    sk_free(o->rule80A);
+    sk_free(o->faGroup);
+    sk_free(o->faProfile);
+    sk_free(o->faPercentage);
+    sk_free(o->faMethod);
+    sk_free(o->openClose);
+    sk_free(o->designatedLocation);
 
-    free(o->deltaNeutralOrderType);
-    free(o->deltaNeutralSettlingFirm);
-    free(o->deltaNeutralClearingAccount);
-    free(o->deltaNeutralClearingIntent);
-    free(o->deltaNeutralOpenClose);
-    free(o->deltaNeutralDesignatedLocation);
-    free(o->scaleTable);
-    free(o->hedgeType);
-    free(o->hedgeParam);
-    free(o->account);
-    free(o->settlingFirm);
-    free(o->clearingAccount);
-    free(o->clearingIntent);
-    free(o->algoStrategy);
+    sk_free(o->deltaNeutralOrderType);
+    sk_free(o->deltaNeutralSettlingFirm);
+    sk_free(o->deltaNeutralClearingAccount);
+    sk_free(o->deltaNeutralClearingIntent);
+    sk_free(o->deltaNeutralOpenClose);
+    sk_free(o->deltaNeutralDesignatedLocation);
+    sk_free(o->scaleTable);
+    sk_free(o->hedgeType);
+    sk_free(o->hedgeParam);
+    sk_free(o->account);
+    sk_free(o->settlingFirm);
+    sk_free(o->clearingAccount);
+    sk_free(o->clearingIntent);
+    sk_free(o->algoStrategy);
 
     if (o->algoParams && o->algoParamsCount) {
         for (int i = 0; i < o->algoParamsCount; i++) {
-            free(o->algoParams[i].tag);
-            free(o->algoParams[i].val);
+            sk_free(o->algoParams[i].tag);
+            sk_free(o->algoParams[i].val);
         }
 
-        free(o->algoParams);
+        sk_free(o->algoParams);
     }
 
     if (o->smartComboRoutingParams && o->smartComboRoutingParamsCount) {
         for (int i = 0; i < o->smartComboRoutingParamsCount; i++) {
-            free(o->smartComboRoutingParams[i].tag);
-            free(o->smartComboRoutingParams[i].val);
+            sk_free(o->smartComboRoutingParams[i].tag);
+            sk_free(o->smartComboRoutingParams[i].val);
         }
 
-        free(o->smartComboRoutingParams);
+        sk_free(o->smartComboRoutingParams);
     }
 
     if (o->orderMiscOptions && o->orderMiscOptionsCount) {
         for (int i = 0; i < o->orderMiscOptionsCount; i++) {
-            free(o->orderMiscOptions[i].tag);
-            free(o->orderMiscOptions[i].val);
+            sk_free(o->orderMiscOptions[i].tag);
+            sk_free(o->orderMiscOptions[i].val);
         }
 
-        free(o->orderMiscOptions);
+        sk_free(o->orderMiscOptions);
     }
 }
 
@@ -158,12 +158,12 @@ void tws_init_order_state(tr_order_state_t *ost)
 
 void tws_destroy_order_state(tr_order_state_t *ost)
 {
-    free(ost->warningText);
-    free(ost->commissionCurrency);
-    free(ost->equityWithLoan);
-    free(ost->maintMargin);
-    free(ost->initMargin);
-    free(ost->status);
+    sk_free(ost->warningText);
+    sk_free(ost->commissionCurrency);
+    sk_free(ost->equityWithLoan);
+    sk_free(ost->maintMargin);
+    sk_free(ost->initMargin);
+    sk_free(ost->status);
 }
 
 void tws_init_contract_details(tr_contract_details_t *cd)
@@ -174,37 +174,37 @@ void tws_init_contract_details(tr_contract_details_t *cd)
 
 void tws_destroy_contract_details(tr_contract_details_t *cd)
 {
-    free(cd->marketName);
-    free(cd->orderTypes);
-    free(cd->validExchanges);
-    free(cd->longName);
-    free(cd->contractMonth);
-    free(cd->industry);
-    free(cd->category);
-    free(cd->subcategory);
-    free(cd->timeZoneId);
-    free(cd->tradingHours);
-    free(cd->liquidHours);
-    free(cd->evRule);
+    sk_free(cd->marketName);
+    sk_free(cd->orderTypes);
+    sk_free(cd->validExchanges);
+    sk_free(cd->longName);
+    sk_free(cd->contractMonth);
+    sk_free(cd->industry);
+    sk_free(cd->category);
+    sk_free(cd->subcategory);
+    sk_free(cd->timeZoneId);
+    sk_free(cd->tradingHours);
+    sk_free(cd->liquidHours);
+    sk_free(cd->evRule);
     if (cd->secIdList && cd->secIdListCount) {
         for (int i = 0; i < cd->secIdListCount; i++) {
-            free(cd->secIdList[i].tag);
-            free(cd->secIdList[i].val);
+            sk_free(cd->secIdList[i].tag);
+            sk_free(cd->secIdList[i].val);
         }
 
-        free(cd->secIdList);
+        sk_free(cd->secIdList);
     }
 
-    free(cd->cusip);
-    free(cd->ratings);
-    free(cd->descAppend);
-    free(cd->bondType);
-    free(cd->couponType);
-    free(cd->maturity);
-    free(cd->issueDate);
-    free(cd->nextOptionType);
-    free(cd->nextOptionDate);
-    free(cd->notes);
+    sk_free(cd->cusip);
+    sk_free(cd->ratings);
+    sk_free(cd->descAppend);
+    sk_free(cd->bondType);
+    sk_free(cd->couponType);
+    sk_free(cd->maturity);
+    sk_free(cd->issueDate);
+    sk_free(cd->nextOptionType);
+    sk_free(cd->nextOptionDate);
+    sk_free(cd->notes);
     tws_destroy_contract(&cd->summary);
 }
 
@@ -215,13 +215,13 @@ void tws_init_execution(tr_execution_t *exec)
 
 void tws_destroy_execution(tr_execution_t *exec)
 {
-    free(exec->execId);
-    free(exec->time);
-    free(exec->acctNumber);
-    free(exec->exchange);
-    free(exec->side);
-    free(exec->orderRef);
-    free(exec->evRule);
+    sk_free(exec->execId);
+    sk_free(exec->time);
+    sk_free(exec->acctNumber);
+    sk_free(exec->exchange);
+    sk_free(exec->side);
+    sk_free(exec->orderRef);
+    sk_free(exec->evRule);
 }
 
 void tws_init_tr_comboleg(tr_comboleg_t *cl)
@@ -232,9 +232,9 @@ void tws_init_tr_comboleg(tr_comboleg_t *cl)
 
 void tws_destroy_tr_comboleg(tr_comboleg_t *cl)
 {
-    free(cl->action);
-    free(cl->exchange);
-    free(cl->designatedLocation);
+    sk_free(cl->action);
+    sk_free(cl->exchange);
+    sk_free(cl->designatedLocation);
 }
 
 void tws_init_exec_filter(tr_exec_filter_t *filter)
@@ -244,12 +244,12 @@ void tws_init_exec_filter(tr_exec_filter_t *filter)
 
 void tws_destroy_exec_filter(tr_exec_filter_t *filter)
 {
-    free(filter->acctCode);
-    free(filter->time);
-    free(filter->symbol);
-    free(filter->secType);
-    free(filter->exchange);
-    free(filter->side);
+    sk_free(filter->acctCode);
+    sk_free(filter->time);
+    sk_free(filter->symbol);
+    sk_free(filter->secType);
+    sk_free(filter->exchange);
+    sk_free(filter->side);
 }
 
 void tws_init_scanner_subscription(tr_scanner_subscription_t *ss)
@@ -269,18 +269,18 @@ void tws_init_scanner_subscription(tr_scanner_subscription_t *ss)
 
 void tws_destroy_scanner_subscription(tr_scanner_subscription_t *ss)
 {
-    free(ss->instrument);
-    free(ss->locationCode);
-    free(ss->scanCode);
-    free(ss->moodyRatingAbove);
-    free(ss->moodyRatingBelow);
-    free(ss->spRatingAbove);
-    free(ss->spRatingBelow);
-    free(ss->maturityDateAbove);
-    free(ss->maturityDateBelow);
-    free(ss->excludeConvertible);
-    free(ss->scannerSettingPairs);
-    free(ss->stockTypeFilter);
+    sk_free(ss->instrument);
+    sk_free(ss->locationCode);
+    sk_free(ss->scanCode);
+    sk_free(ss->moodyRatingAbove);
+    sk_free(ss->moodyRatingBelow);
+    sk_free(ss->spRatingAbove);
+    sk_free(ss->spRatingBelow);
+    sk_free(ss->maturityDateAbove);
+    sk_free(ss->maturityDateBelow);
+    sk_free(ss->excludeConvertible);
+    sk_free(ss->scannerSettingPairs);
+    sk_free(ss->stockTypeFilter);
 }
 
 void tws_init_tag_value(tr_tag_value_t *t)
@@ -290,8 +290,8 @@ void tws_init_tag_value(tr_tag_value_t *t)
 
 void tws_destroy_tag_value(tr_tag_value_t *t)
 {
-    free(t->tag);
-    free(t->val);
+    sk_free(t->tag);
+    sk_free(t->val);
 }
 
 void tws_init_order_combo_leg(tr_order_combo_leg_t *ocl)
