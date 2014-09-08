@@ -8,7 +8,7 @@ add_library(twsclient_static STATIC ${LIB_TWS_CLIENT_SOURCE})
 target_link_libraries(twsclient ${LIBUV_LIBRARIES} ${JEMALLOC_LIBRARIES} ${ZLOG_LIBRARIES})
 target_link_libraries(twsclient_static ${LIBUV_LIBRARIES} ${JEMALLOC_LIBRARIES} ${ZLOG_LIBRARIES})
 
-set_target_properties(twsclient PROPERTIES VERSION 0.0.1 SOVERSION 0)
+set_target_properties(twsclient PROPERTIES VERSION ${LIBTWSCLIENT_VERSION} SOVERSION ${LIBTWSCLIENT_PATCH})
 set_target_properties(twsclient PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(twsclient_static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(twsclient_static PROPERTIES OUTPUT_NAME "twsclient")
