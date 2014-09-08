@@ -75,18 +75,18 @@ EXPORT void tws_client_req_scanner_subscription(tws_client_t *client, int ticker
                                          tr_scanner_subscription_t *subscription,
                                          tr_tag_value_t *options, int options_count);
 EXPORT void tws_client_req_mkt_data(tws_client_t *client, int tickerId,
-                             tr_contract_t *contract, char *generick_tick_list,
+                             tr_contract_t *contract, const char *generick_tick_list,
                              bool snapshot, tr_tag_value_t *options, int options_count);
 EXPORT void tws_client_cancel_realtime_bars(tws_client_t *client, int tickerId);
 EXPORT void tws_client_cancel_historical_data(tws_client_t *client, int tickerId);
 EXPORT void tws_client_req_historical_data(tws_client_t *client, int tickerId,
-                                    tr_contract_t *contract, char *endDataTime,
-                                    char *durationStr, char *barSizeSetting,
-                                    char *whatToShow, bool useRTH, int formatDate,
+                                    tr_contract_t *contract, const char *endDataTime,
+                                    const char *durationStr, const char *barSizeSetting,
+                                    const char *whatToShow, bool useRTH, int formatDate,
                                     tr_tag_value_t *options, int options_count);
 EXPORT void tws_client_req_realtime_bars(tws_client_t *client, int tickerId,
                                   tr_contract_t *contract, int barSize,
-                                  char *whatToShow, bool useRTH,
+                                  const char *whatToShow, bool useRTH,
                                   tr_tag_value_t *options, int option_count);
 EXPORT void tws_client_req_contract_details(tws_client_t *client, int reqId,
                                      tr_contract_t *contract);
@@ -97,9 +97,9 @@ EXPORT void tws_client_cancel_mkt_data(tws_client_t *client, int tickerId);
 EXPORT void tws_client_cancel_mkt_depth(tws_client_t *client, int tickerId);
 EXPORT void tws_client_exercise_options(tws_client_t *client, int tickerId,
                                  tr_contract_t *contract, int exerciseAction,
-                                 int exerciseQuantity, char *account, int override);
+                                 int exerciseQuantity, const char *account, int override);
 
-EXPORT void tws_client_req_account_updates(tws_client_t *client, bool subscribe, char *acctCode);
+EXPORT void tws_client_req_account_updates(tws_client_t *client, bool subscribe, const char *acctCode);
 EXPORT void tws_client_req_executions(tws_client_t *client, int reqId, tr_exec_filter_t *filter);
 EXPORT void tws_client_cancel_order(tws_client_t *client, int id);
 EXPORT void tws_client_req_open_orders(tws_client_t *client);
@@ -111,10 +111,10 @@ EXPORT void tws_client_req_auto_open_orders(tws_client_t *client, bool bAutoBind
 EXPORT void tws_client_req_all_open_orders(tws_client_t *client);
 EXPORT void tws_client_req_managed_accts(tws_client_t *client);
 EXPORT void tws_client_req_fa(tws_client_t *client, int faDataType);
-EXPORT void tws_client_replace_fa(tws_client_t *client, int faDataType, char *xml);
+EXPORT void tws_client_replace_fa(tws_client_t *client, int faDataType, const char *xml);
 EXPORT void tws_client_req_current_time(tws_client_t *client);
 EXPORT void tws_client_req_fundamenta_data(tws_client_t *client, int reqId, tr_contract_t *contract,
-                                    char *reportType);
+                                    const char *reportType);
 EXPORT void tws_client_cancel_fundamenta_data(tws_client_t *client, int reqId);
 EXPORT void tws_client_calculate_implied_volatility(tws_client_t *client, int reqId,
                                              tr_contract_t *contract,
@@ -128,14 +128,14 @@ EXPORT void tws_client_req_global_cancel(tws_client_t *client);
 EXPORT void tws_client_req_market_data_type(tws_client_t *client, int marketDataType);
 EXPORT void tws_client_req_positions(tws_client_t *client);
 EXPORT void tws_client_cancel_positions(tws_client_t *client);
-EXPORT void tws_client_req_account_summary(tws_client_t *client, int reqId, char *group, char *tags);
+EXPORT void tws_client_req_account_summary(tws_client_t *client, int reqId, const char *group, const char *tags);
 EXPORT void tws_client_cancel_account_summary(tws_client_t *client, int reqId);
-EXPORT void tws_client_verify_request(tws_client_t *client, char *apiName, char *apiVersion);
-EXPORT void tws_client_verify_message(tws_client_t *client, char *apiData);
+EXPORT void tws_client_verify_request(tws_client_t *client, const char *apiName, const char *apiVersion);
+EXPORT void tws_client_verify_message(tws_client_t *client, const char *apiData);
 EXPORT void tws_client_query_display_groups(tws_client_t *client, int reqId);
 EXPORT void tws_client_subscribe_to_group_events(tws_client_t *client, int reqId, int groupId);
 EXPORT void tws_client_unsubscribe_from_group_events(tws_client_t *client, int reqId);
-EXPORT void tws_client_update_display_group(tws_client_t *client, int reqId, char *contractInfo);
+EXPORT void tws_client_update_display_group(tws_client_t *client, int reqId, const char *contractInfo);
 
 
 #ifdef __cplusplus

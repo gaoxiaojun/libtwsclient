@@ -101,7 +101,7 @@ static inline void send_bool(real_client_t *client, bool value)
     send_int32(client, value ? 1 : 0);
 }
 
-static void send_str(real_client_t *client, char *str)
+static void send_str(real_client_t *client, const char *str)
 {
     if (IS_EMPTY(str)) {
         send_eol(client);
@@ -334,7 +334,7 @@ void tws_client_req_scanner_subscription(tws_client_t *c, int tickerId,
 }
 
 void tws_client_req_mkt_data(tws_client_t *c, int tickerId,
-                             tr_contract_t *contract, char *generick_tick_list,
+                             tr_contract_t *contract, const char *generick_tick_list,
                              bool snapshot, tr_tag_value_t *options, int optionsCount)
 {
     CHECK_CONNECTED;
@@ -383,9 +383,9 @@ void tws_client_cancel_realtime_bars(tws_client_t *c, int tickerId)
 }
 
 void tws_client_req_historical_data(tws_client_t *c, int tickerId,
-                                    tr_contract_t *contract, char *endDataTime,
-                                    char *durationStr, char *barSizeSetting,
-                                    char *whatToShow, bool useRTH, int formatDate,
+                                    tr_contract_t *contract, const char *endDataTime,
+                                    const char *durationStr, const char *barSizeSetting,
+                                    const char *whatToShow, bool useRTH, int formatDate,
                                     tr_tag_value_t *options, int optionsCount)
 {
     CHECK_CONNECTED;
@@ -414,7 +414,7 @@ void tws_client_req_historical_data(tws_client_t *c, int tickerId,
 
 void tws_client_req_realtime_bars(tws_client_t *c, int tickerId,
                                   tr_contract_t *contract, int barSize,
-                                  char *whatToShow, bool useRTH,
+                                  const char *whatToShow, bool useRTH,
                                   tr_tag_value_t *options, int optionsCount)
 {
     CHECK_CONNECTED;
@@ -511,7 +511,7 @@ void tws_client_cancel_mkt_depth(tws_client_t *c, int tickerId)
 
 void tws_client_exercise_options(tws_client_t *c, int tickerId,
                                  tr_contract_t *contract, int exerciseAction,
-                                 int exerciseQuantity, char *account, int override)
+                                 int exerciseQuantity, const char *account, int override)
 {
     CHECK_CONNECTED;
 
@@ -576,7 +576,7 @@ void tws_client_place_order(tws_client_t *c, int id,
         send_tag_list(client, order->smartComboRoutingParams, order->smartComboRoutingParamsCount);
     }
 
-    send_str(client, "");
+    send_str(client, ""); // send deprecated sharesAllocation field
     send_double(client, order->discretionaryAmt);
     send_str(client, order->goodAfterTime);
     send_str(client, order->goodTillDate);
@@ -667,7 +667,7 @@ void tws_client_place_order(tws_client_t *c, int id,
     flush_buf(client);
 }
 
-void tws_client_req_account_updates(tws_client_t *c, bool subscribe, char *acctCode)
+void tws_client_req_account_updates(tws_client_t *c, bool subscribe, const char *acctCode)
 {
     CHECK_CONNECTED;
 
@@ -818,7 +818,7 @@ void tws_client_req_fa(tws_client_t *c, int faDataType)
     flush_buf(client);
 }
 
-void tws_client_replace_fa(tws_client_t *c, int faDataType, char *xml)
+void tws_client_replace_fa(tws_client_t *c, int faDataType, const char *xml)
 {
     CHECK_CONNECTED;
 
@@ -844,7 +844,7 @@ void tws_client_req_current_time(tws_client_t *c)
 
 void tws_client_req_fundamenta_data(tws_client_t *c, int reqId,
                                     tr_contract_t *contract,
-                                    char *reportType)
+                                    const char *reportType)
 {
     CHECK_CONNECTED;
 
@@ -986,7 +986,7 @@ void tws_client_cancel_positions(tws_client_t *c)
     flush_buf(client);
 }
 
-void tws_client_req_account_summary(tws_client_t *c, int reqId, char *group, char *tags)
+void tws_client_req_account_summary(tws_client_t *c, int reqId, const char *group, const char *tags)
 {
     CHECK_CONNECTED;
 
@@ -1012,7 +1012,7 @@ void tws_client_cancel_account_summary(tws_client_t *c, int reqId)
     flush_buf(client);
 }
 
-void tws_client_verify_request(tws_client_t *c, char *apiName, char *apiVersion)
+void tws_client_verify_request(tws_client_t *c, const char *apiName, const char *apiVersion)
 {
     CHECK_CONNECTED;
 
@@ -1025,7 +1025,7 @@ void tws_client_verify_request(tws_client_t *c, char *apiName, char *apiVersion)
     flush_buf(client);
 }
 
-void tws_client_verify_message(tws_client_t *c, char *apiData)
+void tws_client_verify_message(tws_client_t *c, const char *apiData)
 {
     CHECK_CONNECTED;
 
@@ -1062,7 +1062,7 @@ void tws_client_subscribe_to_group_events(tws_client_t *c, int reqId, int groupI
     flush_buf(client);
 }
 
-void tws_client_update_display_group(tws_client_t *c, int reqId, char *contractInfo)
+void tws_client_update_display_group(tws_client_t *c, int reqId, const char *contractInfo)
 {
     CHECK_CONNECTED;
 
