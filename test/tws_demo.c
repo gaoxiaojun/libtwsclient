@@ -9,9 +9,7 @@
 
 #include <twsclient/tws_client.h>
 
-extern void tws_model_event_cb(tws_client_t *client, int event_type, void *ud);
 extern void tws_debug(tws_client_t *client, int event_type, void *ud);
-extern void* tws_model_new_context(tws_client_t *client);
 
 void sig_int_cb(uv_signal_t *handle, int signum)
 {
