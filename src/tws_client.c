@@ -172,11 +172,7 @@ static void _client_reconnect_start(real_client_t *client)
         if (client->reconnects >= client->max_reconnects_incr) {
             delay = client->reconnect_delay_max;
         } else {
-            if (client->enable_exp_backoff) {
-              delay = client->reconnect_delay << client->reconnects;
-            } else {
           delay = client->reconnect_delay * client->reconnects;
-        }
       }
 
       if (delay > client->reconnect_delay_max) delay = client->reconnect_delay_max;
@@ -218,36 +214,31 @@ tws_client_t * tws_client_new(uv_loop_t *loop, tws_event_callback cb)
     return (tws_client_t *)client;
 }
 
-tws_client_t* tws_client_new_with_reconnect(uv_loop_t *loop, tws_event_callback cb,
-                                            int delay, int delay_max, int exp_backoff)
+int tws_client_enable_reconnect(tws_client_t *c, int delay, int delay_max)
 {
-    real_client_t *client = (real_client_t *)tws_client_new(loop, cb);
+    real_client_t *client = (real_client_t *)c;
 
-    if (delay <= 0 || delay_max <= 0) {
-        if (client->logger)
-            client->logger("Bad arguments, delay: %d, delay_max: %d", delay, delay_max);
-      tws_client_destroy((tws_client_t *)client);
-      return NULL;
-    }
+    if (delay <=0  || delay_max <= 0)
+        return EINVAL;
 
     client->enable_reconnect = 1;
     client->reconnect_delay = delay;
     client->reconnect_delay_max = delay_max;
-    client->enable_exp_backoff = exp_backoff ? 1 : 0;
-    client->seed = time(0);
-
-    if (!client->enable_exp_backoff) {
-      client->max_reconnects_incr = client->reconnect_delay_max / client->reconnect_delay + 1;
-    } else {
-      client->max_reconnects_incr = (int)log(1.0 * client->reconnect_delay_max /
-                                             client->reconnect_delay) / log(2.0) + 1;
-    }
+     client->seed = time(0);
+    client->max_reconnects_incr = client->reconnect_delay_max / client->reconnect_delay + 1;
 
     uv_timer_init(client->loop, &client->reconnect_timer);
 
-    return (tws_client_t *)client;
+    return 0;
 }
 
+void tws_client_disable_reconnect(tws_client_t *c)
+{
+    real_client_t *client = (real_client_t *)c;
+    client->enable_reconnect = 0;
+    if (uv_is_active((uv_handle_t *)&client->reconnect_timer))
+        uv_timer_stop(&client->reconnect_timer);
+}
 
 void tws_client_destroy(tws_client_t *c)
 {
@@ -266,6 +257,9 @@ void tws_client_stop(tws_client_t *c)
     real_client_t *client = (real_client_t *)c;
 
     client->enable_reconnect = 0;
+
+    if (uv_is_active((uv_handle_t *)&client->reconnect_timer))
+        uv_timer_stop(&client->reconnect_timer);
 
     if (TWS_ST_CLOSED != client->state) {
       tws_client_close((tws_client_t *)client);

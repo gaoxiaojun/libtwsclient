@@ -25,20 +25,9 @@ extern "C" {
  */
 EXPORT tws_client_t * tws_client_new(uv_loop_t *loop, tws_event_callback cb);
 
-/**
- * Create and init tws client instance with reconnect enable
- *
- * @param delay delay time in second
- * @param delay_max the max delay time in second
- * @param exp_backoff whether enable exponetial backoff
- *
- * For example, if 2 -> delay, 10 -> delay_max, then the reconnect delay will be
- *   2, 4, 6, 8, 10, 10, 10 seconds...
- *   if 2 -> delay, 30 -> delay_max enable exponetial backoff, the reconnect delay will be
- *   2, 4, 8, 16, 30, 30 seconds...
- */
-EXPORT tws_client_t* tws_client_new_with_reconnect(uv_loop_t *loop, tws_event_callback cb,
-                                            int delay, int delay_max, int exp_backoff);
+EXPORT int tws_client_enable_reconnect(tws_client_t *c, int delay, int delay_max);
+
+EXPORT void tws_client_disable_reconnect(tws_client_t *c);
 
 /**
  * Start the connection of the client.

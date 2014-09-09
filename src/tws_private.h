@@ -41,7 +41,6 @@ typedef struct real_client_s {
     int max_reconnects_incr;
     int reconnect_delay;
     int reconnect_delay_max;
-    int enable_exp_backoff;
     unsigned seed;
 
     /* write buf */
