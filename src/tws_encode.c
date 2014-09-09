@@ -69,6 +69,11 @@ typedef enum {
     COMBO_FOR_PLACE_ORDER,
 } send_contract_combolegs_mode;
 
+typedef enum {
+    WITH_PRIMARY_EXCH,
+    WITHOUT_PRIMARY_EXCH
+}send_contract_mode;
+
 /* marshal API */
 static void send_int32(real_client_t *client, int32_t value)
 {
@@ -131,7 +136,7 @@ static inline void flush_buf(real_client_t *client)
 }
 
 /* Helper API */
-static void send_contract_base(real_client_t *client, const tr_contract_t *contract)
+static void send_contract_base(real_client_t *client, const tr_contract_t *contract, send_contract_mode mode)
 {
     send_int32(client, contract->conId);
     send_str(client, contract->symbol);
@@ -141,7 +146,8 @@ static void send_contract_base(real_client_t *client, const tr_contract_t *contr
     send_str(client, contract->right);
     send_str(client, contract->multiplier);
     send_str(client, contract->exchange);
-    send_str(client, contract->primaryExch);
+    if (WITH_PRIMARY_EXCH == mode)
+        send_str(client, contract->primaryExch);
     send_str(client, contract->currency);
     send_str(client, contract->localSymbol);
     send_str(client, contract->tradingClass);
@@ -164,7 +170,6 @@ static void send_contract_combolegs(real_client_t *client, const tr_contract_t *
 
         if (mode != COMBO_FOR_REQUEST_MARKET_DATA && mode != COMBO_FOR_REQUEST_HIST_DATA) {
             send_int32(client, cl->openClose);
-
             send_int32(client, cl->shortSaleSlot);
             send_str(client, cl->designatedLocation);
             send_int32(client, cl->exemptCode);
@@ -344,7 +349,7 @@ void tws_client_req_mkt_data(tws_client_t *c, int tickerId,
     send_int32(client, VERSION);
     send_int32(client, tickerId);
 
-    send_contract_base(client, contract);
+    send_contract_base(client, contract, WITH_PRIMARY_EXCH);
 
     if ((contract->secType != 0) && (ascii_strcasecmp(contract->secType, "BAG") == 0))
         send_contract_combolegs(client, contract, COMBO_FOR_REQUEST_MARKET_DATA);
@@ -394,7 +399,7 @@ void tws_client_req_historical_data(tws_client_t *c, int tickerId,
     send_cmd(client, REQ_HISTORICAL_DATA);
     send_int32(client, VERSION);
     send_int32(client, tickerId);
-    send_contract_base(client, contract);
+    send_contract_base(client, contract, WITH_PRIMARY_EXCH);
     send_int32(client, contract->includeExpired ? 1 : 0);
     send_str(client, endDataTime);
     send_str(client, barSizeSetting);
@@ -424,7 +429,7 @@ void tws_client_req_realtime_bars(tws_client_t *c, int tickerId,
     send_int32(client, VERSION);
     send_int32(client, tickerId);
 
-    send_contract_base(client, contract);
+    send_contract_base(client, contract, WITH_PRIMARY_EXCH);
 
     send_int32(client, barSize);
     send_str(client, whatToShow);
@@ -445,17 +450,7 @@ void tws_client_req_contract_details(tws_client_t *c, int reqId,
     send_int32(client, VERSION);
     send_int32(client, reqId);
 
-    send_int32(client, contract->conId);
-    send_str(client, contract->symbol);
-    send_str(client, contract->secType);
-    send_str(client, contract->expiry);
-    send_double(client, contract->strike);
-    send_str(client, contract->right);
-    send_str(client, contract->multiplier);
-    send_str(client, contract->exchange);
-    send_str(client, contract->currency);
-    send_str(client, contract->localSymbol);
-    send_str(client, contract->tradingClass);
+    send_contract_base(client, contract, WITHOUT_PRIMARY_EXCH);
 
     send_int32(client, contract->includeExpired);
     send_str(client, contract->secIdType);
@@ -476,18 +471,7 @@ void tws_client_req_mkt_depth(tws_client_t *c, int tickerId,
     send_int32(client, VERSION);
     send_int32(client, tickerId);
 
-    send_int32(client, contract->conId);
-    send_str(client, contract->symbol);
-    send_str(client, contract->secType);
-    send_str(client, contract->expiry);
-    send_double(client, contract->strike);
-    send_str(client, contract->right);
-    send_str(client, contract->multiplier);
-    send_str(client, contract->exchange);
-    send_str(client, contract->currency);
-    send_str(client, contract->localSymbol);
-    send_str(client, contract->tradingClass);
-
+    send_contract_base(client, contract, WITHOUT_PRIMARY_EXCH);
 
     send_int32(client, numRows);
 
@@ -531,17 +515,7 @@ void tws_client_exercise_options(tws_client_t *c, int tickerId,
     send_int32(client, VERSION);
     send_int32(client, tickerId);
 
-    send_int32(client, contract->conId);
-    send_str(client, contract->symbol);
-    send_str(client, contract->secType);
-    send_str(client, contract->expiry);
-    send_double(client, contract->strike);
-    send_str(client, contract->right);
-    send_str(client, contract->multiplier);
-    send_str(client, contract->exchange);
-    send_str(client, contract->currency);
-    send_str(client, contract->localSymbol);
-    send_str(client, contract->tradingClass);
+    send_contract_base(client, contract, WITHOUT_PRIMARY_EXCH);
 
 
     send_int32(client, exerciseAction);
@@ -562,7 +536,7 @@ void tws_client_place_order(tws_client_t *c, int id,
     send_int32(client, VERSION);
     send_int32(client, id);
 
-    send_contract_base(client, contract);
+    send_contract_base(client, contract, WITH_PRIMARY_EXCH);
     send_str(client, contract->secIdType);
     send_str(client, contract->secId);
 
@@ -912,7 +886,7 @@ void tws_client_calculate_implied_volatility(tws_client_t *c, int reqId,
     send_int32(client, VERSION);
     send_int32(client, reqId);
 
-    send_contract_base(client, contract);
+    send_contract_base(client, contract, WITH_PRIMARY_EXCH);
 
     send_double(client, optionPrice);
     send_double(client, underPrice);
@@ -943,7 +917,7 @@ void tws_client_calculate_option_price(tws_client_t *c, int reqId,
     send_int32(client, VERSION);
     send_int32(client, reqId);
 
-    send_contract_base(client, contract);
+    send_contract_base(client, contract, WITH_PRIMARY_EXCH);
 
     send_double(client, volatility);
     send_double(client, underPrice);
