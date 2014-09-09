@@ -1359,7 +1359,7 @@ static char receive_verify_completed(real_client_t *client, char *token)
     PBEGIN;
         /* ignore version */
         YIELD;
-        if (strcmp(token, "true") == 0) {
+        if (ascii_strcasecmp(token, "true") == 0) {
             ud.isSuccessful = 1;
         } else {
             ud.isSuccessful = 0;

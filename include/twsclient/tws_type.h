@@ -7,6 +7,8 @@ extern "C" {
 
 #include <stdbool.h>
 
+#include <twsclient/tws_common.h>
+
 typedef enum {
   TWS_ST_CLOSED = 1,
   TWS_ST_DISCONNECTING,
@@ -444,38 +446,38 @@ typedef struct _commission_report {
 } tr_commission_report_t;
 
 /* Data API */
-void tws_init_tr_comboleg(tr_comboleg_t *comboleg_ref);
-void tws_destroy_tr_comboleg(tr_comboleg_t *comboleg_ref);
+EXPORT void tws_init_tr_comboleg(tr_comboleg_t *comboleg_ref);
+EXPORT void tws_destroy_tr_comboleg(tr_comboleg_t *comboleg_ref);
 
-void tws_init_exec_filter(tr_exec_filter_t *filter);
-void tws_destroy_exec_filter(tr_exec_filter_t *filter);
+EXPORT void tws_init_exec_filter(tr_exec_filter_t *filter);
+EXPORT void tws_destroy_exec_filter(tr_exec_filter_t *filter);
 
-void tws_init_scanner_subscription(tr_scanner_subscription_t *ss);
-void tws_destroy_scanner_subscription(tr_scanner_subscription_t *ss);
+EXPORT void tws_init_scanner_subscription(tr_scanner_subscription_t *ss);
+EXPORT void tws_destroy_scanner_subscription(tr_scanner_subscription_t *ss);
 
-void tws_init_tag_value(tr_tag_value_t *t);
-void tws_destroy_tag_value(tr_tag_value_t *t);
+EXPORT void tws_init_tag_value(tr_tag_value_t *t);
+EXPORT void tws_destroy_tag_value(tr_tag_value_t *t);
 
-void tws_init_order_combo_leg(tr_order_combo_leg_t *ocl);
-void tws_destroy_order_combo_leg(tr_order_combo_leg_t *ocl);
+EXPORT void tws_init_order_combo_leg(tr_order_combo_leg_t *ocl);
+EXPORT void tws_destroy_order_combo_leg(tr_order_combo_leg_t *ocl);
 
-void tws_init_under_comp(under_comp_t *u);
-void tws_destroy_under_comp(under_comp_t *u);
+EXPORT void tws_init_under_comp(under_comp_t *u);
+EXPORT void tws_destroy_under_comp(under_comp_t *u);
 
-void tws_init_order(tr_order_t *o);
-void tws_destroy_order(tr_order_t *o);
+EXPORT void tws_init_order(tr_order_t *o);
+EXPORT void tws_destroy_order(tr_order_t *o);
 
-void tws_init_contract(tr_contract_t *c);
-void tws_destroy_contract(tr_contract_t *c);
+EXPORT void tws_init_contract(tr_contract_t *c);
+EXPORT void tws_destroy_contract(tr_contract_t *c);
 
-void tws_init_execution(tr_execution_t *exec);
-void tws_destroy_execution(tr_execution_t *exec);
+EXPORT void tws_init_execution(tr_execution_t *exec);
+EXPORT void tws_destroy_execution(tr_execution_t *exec);
 
-void tws_init_contract_details(tr_contract_details_t *cd);
-void tws_destroy_contract_details(tr_contract_details_t *cd);
+EXPORT void tws_init_contract_details(tr_contract_details_t *cd);
+EXPORT void tws_destroy_contract_details(tr_contract_details_t *cd);
 
-void tws_init_order_state(tr_order_state_t *ost);
-void tws_destroy_order_state(tr_order_state_t *ost);
+EXPORT void tws_init_order_state(tr_order_state_t *ost);
+EXPORT void tws_destroy_order_state(tr_order_state_t *ost);
 
 #ifdef __cplusplus
 }
