@@ -371,7 +371,9 @@ static char receive_acct_value(real_client_t *client, char *token)
         }
 
         CALLBACK(ACCT_VALUE);
-
+        sk_free(ud.key);
+        sk_free(ud.val);
+        sk_free(ud.currency);
         sk_free(ud.accoutName);
     PEND;
 }
