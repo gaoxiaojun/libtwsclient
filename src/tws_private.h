@@ -45,12 +45,12 @@ typedef struct real_client_s {
 
     /* write buf */
     char wbuf[1024];
-    int wlen;
+    size_t wlen;
 
     /* read buf */
     char rbuf[4096];
-    int rstart;
-    int rlen;
+    size_t rstart;
+    size_t rlen;
 
     /* event */
     tws_event_callback event_cb;

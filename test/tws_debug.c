@@ -3,7 +3,7 @@
 #include <math.h>
 #include <float.h>
 #include <stdarg.h>
-
+#include <string.h>
 #include <twsclient/tws_client.h>
 
 /* utility */
@@ -347,11 +347,10 @@ void on_client_connected(tws_client_t *client)
     tws_destroy_contract(&contract);
 }
 
-extern void tws_client_destroy(tws_client_t *client);
 void on_client_disconnected(tws_client_t *client)
 {
     printf("tws closed!!\n");
-    tws_client_destroy(client);
+    tws_client_stop(client);
 }
 
 void dbg_event_tick_price(event_tick_price_t *ud)
@@ -517,12 +516,12 @@ static void dbg_event_current_time(event_current_time_t *ud)
 
     strftime(tbuf, sizeof(tbuf), "[%Y%m%dT%H%M%S] ", gmtime(&timestamp));
 
-    tws_cb_printf(0, "current_time: time=%lld ~ '%s'\n", ud->time, tbuf);
+    tws_cb_printf(0, "current_time: time=%ld ~ '%s'\n", ud->time, tbuf);
 }
 
 static void dbg_event_realtime_bar(event_realtime_bars_t *ud)
 {
-    tws_cb_printf(0, "realtime_bar: req_id=%d, time=%lld, ohlc=%.4g/%.4g/%.4g/%.4g, vol=%lld, wap=%.4g, count=%d\n",
+    tws_cb_printf(0, "realtime_bar: req_id=%d, time=%ld, ohlc=%.4g/%.4g/%.4g/%.4g, vol=%ld, wap=%.4g, count=%d\n",
                   ud->reqId, ud->time, ud->open, ud->high, ud->low, ud->close, ud->volume, ud->wap, ud->count);
 }
 

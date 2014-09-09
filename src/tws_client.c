@@ -3,7 +3,7 @@
 #include <errno.h>
 #include <math.h>
 #include <assert.h>
-
+#include <string.h>
 #include <twsclient/tws_client.h>
 
 #define __TWS_INTERNAL__

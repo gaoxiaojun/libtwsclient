@@ -51,7 +51,9 @@
 
 #if __GNUC__ >= 4
 
-#pragma GCC diagnostic ignored "-Wgnu-label-as-value"
+#ifdef __clang__
+ #pragma GCC diagnostic ignored "-Wgnu-label-as-value"
+#endif
 
 /** \hideinitializer */
 typedef void * lc_t;

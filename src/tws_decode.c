@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <float.h>
 #include <math.h>
-
+#include <string.h>
 #include <twsclient/tws_type.h>
 #include <twsclient/tws_event.h>
 #include <twsclient/tws_error.h>

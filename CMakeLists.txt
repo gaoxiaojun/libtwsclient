@@ -46,7 +46,7 @@ else (WIN32)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 ")
   endif(CMAKE_COMPILER_IS_GNUCC)
   set(CMAKE_C_FLAGS
-      "${CMAKE_C_FLAGS} -pedantic -Wpointer-arith -Wno-format-y2k -Wstrict-prototypes -Wmissing-declarations -Wnested-externs -Wextra	-Wundef -Wwrite-strings -Wold-style-definition -Wredundant-decls -Wno-unused-parameter -Wno-sign-compare")
+      "${CMAKE_C_FLAGS} -Wpointer-arith -Wno-format-y2k -Wnested-externs -Wextra	-Wundef -Wwrite-strings -Wold-style-definition -Wredundant-decls -Wno-unused-parameter -Wno-sign-compare")
 
   set(CMAKE_C_FLAGS_DEBUG "-DDEBUG -g")
   set(CMAKE_C_FLAGS_RELEASE "-DNDEBUG -O2 -Wuninitialized")

@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include <float.h>
 #include <stdio.h>
-
+#include <string.h>
 #include <twsclient/tws_type.h>
 
 #define __TWS_INTERNAL__

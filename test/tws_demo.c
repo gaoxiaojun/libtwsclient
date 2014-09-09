@@ -74,6 +74,5 @@ int main(int argc, char **argv)
 
     tws_client_destroy(client);
 
-    printf("exit...\n");
     return 0;
 }
