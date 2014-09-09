@@ -476,7 +476,18 @@ void tws_client_req_mkt_depth(tws_client_t *c, int tickerId,
     send_int32(client, VERSION);
     send_int32(client, tickerId);
 
-    send_contract_base(client, contract);
+    send_int32(client, contract->conId);
+    send_str(client, contract->symbol);
+    send_str(client, contract->secType);
+    send_str(client, contract->expiry);
+    send_double(client, contract->strike);
+    send_str(client, contract->right);
+    send_str(client, contract->multiplier);
+    send_str(client, contract->exchange);
+    send_str(client, contract->currency);
+    send_str(client, contract->localSymbol);
+    send_str(client, contract->tradingClass);
+
 
     send_int32(client, numRows);
 
@@ -520,7 +531,18 @@ void tws_client_exercise_options(tws_client_t *c, int tickerId,
     send_int32(client, VERSION);
     send_int32(client, tickerId);
 
-    send_contract_base(client, contract);
+    send_int32(client, contract->conId);
+    send_str(client, contract->symbol);
+    send_str(client, contract->secType);
+    send_str(client, contract->expiry);
+    send_double(client, contract->strike);
+    send_str(client, contract->right);
+    send_str(client, contract->multiplier);
+    send_str(client, contract->exchange);
+    send_str(client, contract->currency);
+    send_str(client, contract->localSymbol);
+    send_str(client, contract->tradingClass);
+
 
     send_int32(client, exerciseAction);
     send_int32(client, exerciseQuantity);
