@@ -58,11 +58,11 @@ int main(int argc, char **argv)
     signal(SIGPIPE, SIG_IGN);
 #endif
 
-    tws_client_t *client = tws_client_new_with_reconnect(loop, tws_debug,
-                                                         2, 10, 0);
-
+    tws_client_t *client = tws_client_new(loop, tws_debug);
     if (!client)
         return ENOMEM;
+
+    tws_client_enable_reconnect(client, 2, 6);
 
     client->logger = debug_logger;
 
