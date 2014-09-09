@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
+#include <stdarg.h>
 
 #include <twsclient/tws_client.h>
 
