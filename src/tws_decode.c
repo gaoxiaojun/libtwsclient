@@ -1412,10 +1412,6 @@ static void decode_response_package(real_client_t *client, char *token)
     switch (client->cmd) {
     case 0:
         client->cmd = atoi(token);
-#ifndef NDEBUG
-        client->debug_p = token;
-        printf("CurrentCmd=%d\n", client->cmd);
-#endif
         break;
     case TICK_PRICE:
         pt_value = receive_tick_price(client, token);
@@ -1547,17 +1543,13 @@ static void decode_response_package(real_client_t *client, char *token)
         pt_value = receive_display_group_updated(client, token);
         break;
     default:
-        fprintf(stderr, "Unknow commnad %d ..exit\n", client->cmd);
+        LOG_ERR("Unknow Tws Commnad [%d]...disconnect\n", client->cmd);
         exit(0);
     }
 
     /* pt_value == PT_ENDED means the packet decode finished, so we wait for next commnad */
     if (PT_ENDED == pt_value) {
         client->cmd = 0;
-#ifndef NDEBUG
-        hexdump("--  ", client->debug_p, client->p - client->debug_p);
-        client->debug_p = client->p;
-#endif
     }
 }
 

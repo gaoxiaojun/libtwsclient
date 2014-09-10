@@ -8,18 +8,23 @@
 
 extern void tws_debug(tws_client_t *client, int event_type, void *ud);
 
-static void debug_printf(FILE *stream, const char *label, const char *fmt, va_list ap)
-{
-  char fmtbuf[1024];
-  vsnprintf(fmtbuf, sizeof(fmtbuf), fmt, ap);
-  fprintf(stream, "%s: %s\n",label, fmtbuf);
-}
+const char *level_str[] = {
+    "DEBUG",
+    "INFO",
+    "NOTICE",
+    "WARN",
+    "ERROR",
+    "FATAL"
+};
 
-void debug_logger(const char *fmt, ...) {
-  va_list ap;
-  va_start(ap, fmt);
-  debug_printf(stderr, "error", fmt, ap);
-  va_end(ap);
+void debug_logger(int level, const char *fmt, ...)
+{
+    char fmtbuf[1024];
+    va_list ap;
+    va_start(ap, fmt);
+    vsnprintf(fmtbuf, sizeof(fmtbuf), fmt, ap);
+    va_end(ap);
+    fprintf(stderr, "%s: %s\n", level_str[level], fmtbuf);
 }
 
 /*

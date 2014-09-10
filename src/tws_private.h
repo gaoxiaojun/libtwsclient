@@ -59,10 +59,7 @@ typedef struct real_client_s {
     /* package decoder */
     struct pt pt;   /* coroutine status */
     char *p;        /* current parser position */
-    int cmd;        /* current decode cmd */
-#ifndef NDEBUG
-    char *debug_p;
-#endif
+    int cmd;        /* current decoding cmd */
 }real_client_t;
 
 typedef void (*tws_client_generical_cb)(real_client_t *client);
@@ -87,7 +84,21 @@ void tws_client_startAPI(real_client_t *client);
 void tws_decode_reset(real_client_t *client);
 void tws_decode_message(real_client_t *client, char *token);
 
+#define LOG_ERR(...) \
+    if (client->logger) \
+        client->logger(LEVEL_ERROR, __VA_ARGS__)
 
+#define LOG_INFO(...) \
+    if (client->logger) \
+        client->logger(LEVEL_INFO, __VA_ARGS__)
+
+#define LOG_DEBUG(...) \
+    if (client->logger) \
+        client->logger(LEVEL_DEBUG, __VA_ARGS__)
+
+#define LOG_WARN(...) \
+    if (client->logger) \
+        client->logger(LEVEL_WARN, __VA_ARGS__)
 
 #ifdef __cplusplus
 }

@@ -27,8 +27,7 @@ void on_write_cb(uv_write_t* req, int status)
 
     sk_free(req);
     if (status < 0) {
-        if (client->logger)
-            client->logger("Error[%d]:%s\n", status, uv_strerror(status));
+        LOG_ERR("Error[%d]:%s\n", status, uv_strerror(status));
         tws_client_close((tws_client_t *)client);
         return;
     }
@@ -59,8 +58,7 @@ static void on_read_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf)
     real_client_t *client = CONTAINER_OF(stream, real_client_t, socket);
 
     if (nread < 0) {
-        if (client->logger)
-            client->logger("Error[%zd]:%s\n", nread, uv_strerror(nread));
+        LOG_ERR("Error[%zd]:%s\n", nread, uv_strerror(nread));
         tws_client_close((tws_client_t *)client);
         return;
     }
@@ -98,8 +96,7 @@ static void on_connect(uv_connect_t *req, int status)
     real_client_t *client = CONTAINER_OF(req, real_client_t, conn_req);
 
     if (status != 0) {
-        if (client->logger)
-            client->logger("Error[%d]:%s\n", status, uv_strerror(status));
+        LOG_ERR("Error[%d]:%s\n", status, uv_strerror(status));
         tws_client_close((tws_client_t *)client);
         return;
     }
@@ -151,8 +148,7 @@ static int _client_connect(real_client_t *client)
     int err = uv_tcp_connect(&client->conn_req, &client->socket,
                          (const struct sockaddr*)&client->req_addr, on_connect);
     if (err < 0) {
-        if (client->logger)
-            client->logger("Error[%d]:%s\n", err, uv_strerror(err));
+        LOG_ERR("Error[%d]:%s\n", err, uv_strerror(err));
         client->state = TWS_ST_CLOSED;
         _client_reconnect_start(client);
         return err;
@@ -179,8 +175,7 @@ static void _client_reconnect_start(real_client_t *client)
 
       delay = rand_r(&client->seed) % delay + delay;
 
-      if (client->logger)
-          client->logger("reconnect: %d, delay: %d\n", client->reconnects, delay);
+      LOG_INFO("reconnect: %d, delay: %d\n", client->reconnects, delay);
       uv_timer_start(&client->reconnect_timer, on_reconnect_timer_cb, delay * 1000, 0);
     }
 }
@@ -274,8 +269,7 @@ int tws_client_connect(tws_client_t *c, const char *host, unsigned int port)
 
     err = uv_ip4_addr(host, port, &client->req_addr);
     if (err < 0) {
-        if (client->logger)
-            client->logger("Error[%d]:%s\n", err, uv_strerror(err));
+        LOG_ERR("Error[%d]:%s\n", err, uv_strerror(err));
         /* if address failed, don't reconnect again */
         client->enable_reconnect = 0;
         return err;

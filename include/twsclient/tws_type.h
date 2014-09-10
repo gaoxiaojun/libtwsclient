@@ -10,6 +10,21 @@ extern "C" {
 #include <twsclient/tws_common.h>
 
 typedef enum {
+    LEVEL_DEBUG   = 0,
+    LEVEL_INFO    = 1,
+    LEVEL_NOTICE  = 2,
+    LEVEL_WARN    = 3,
+    LEVEL_ERROR   = 4,
+    LEVEL_FATAL   = 5
+}LOG_LEVEL;
+
+typedef void (*tws_logger)(int level, const char *fmt, ...)
+#ifdef __GNUC__
+__attribute__((format(printf, 2, 3)))
+#endif
+;
+
+typedef enum {
   TWS_ST_CLOSED = 1,
   TWS_ST_DISCONNECTING,
   TWS_ST_CONNECTING,
@@ -17,8 +32,6 @@ typedef enum {
   TWS_ST_AUTHED,
   TWS_ST_READY,   /* now the client ready for command */
 } tws_client_state;
-
-typedef void (*tws_logger)(const char *fmt, ...);
 
 #define TWS_CLIENT_PUBLIC_FIELDS \
     void *data;                 \

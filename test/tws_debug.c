@@ -163,7 +163,6 @@ const char *tr_auction_strategy_name(tr_auction_strategy_t x)
     return "(unknown)";
 }
 
-/* used by the default event callback methods in callbacks.c */
 extern void tws_cb_printf(int indent_level, const char *msg, ...)
 #ifdef __GNUC__
 __attribute__((format(printf, 2, 3)))
