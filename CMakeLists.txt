@@ -77,7 +77,7 @@ if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
   set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=gnu99" )
 endif()
 
-install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 add_subdirectory(src)
 
