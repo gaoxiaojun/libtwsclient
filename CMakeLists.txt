@@ -3,8 +3,8 @@ cmake_minimum_required (VERSION 3.0)
 project (libtwsclient C)
 
 set(LIBTWSCLIENT_MAJOR 0)
-set(LIBTWSCLIENT_MINOR 0)
-set(LIBTWSCLIENT_MICRO 2)
+set(LIBTWSCLIENT_MINOR 1)
+set(LIBTWSCLIENT_MICRO 0)
 set(LIBTWSCLIENT_PATCH 0)
 
 set(LIBTWSCLIENT_VERSION "${LIBTWSCLIENT_MAJOR}.${LIBTWSCLIENT_MINOR}.${LIBTWSCLIENT_MICRO}")
@@ -64,8 +64,10 @@ option(BUILD_DEMOS "Build the libtwsclient example programs" ON)
 find_package(LibUV REQUIRED)
 include_directories(SYSTEM ${LIBUV_INCLUDE_DIRS})
 
-find_package(Jemalloc)
-include_directories(SYSTEM ${JEMALLOC_INCLUDE_DIRS})
+if(USE_JEMALLOC)
+ find_package(Jemalloc)
+ include_directories(SYSTEM ${JEMALLOC_INCLUDE_DIRS})
+endif()
 
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/include)
 
