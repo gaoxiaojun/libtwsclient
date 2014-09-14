@@ -86,13 +86,7 @@ extern "C" {
 # define inline __inline
 #endif
 
-#ifndef UNUSED
-# if __GNUC__
-#  define UNUSED __attribute__((unused))
-# else
-#  define UNUSED
-# endif
-#endif
+#define UNUSED(x) (void)x
 
 #ifdef PLATFORM_WIN
 #define ascii_strcasecmp(x,y) _stricmp(x,y)

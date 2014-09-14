@@ -38,6 +38,8 @@ void on_write_cb(uv_write_t* req, int status)
 
 static void on_alloc_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf)
 {
+    UNUSED(suggested_size);
+
     real_client_t *client = CONTAINER_OF(handle, real_client_t, socket);
 
     int rbuf_free_len = sizeof(client->rbuf) - (client->rstart + client->rlen);
@@ -55,6 +57,7 @@ static void on_alloc_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* bu
 
 static void on_read_cb(uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf)
 {
+    UNUSED(buf);
     real_client_t *client = CONTAINER_OF(stream, real_client_t, socket);
 
     if (nread < 0) {

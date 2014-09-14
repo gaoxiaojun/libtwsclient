@@ -173,6 +173,7 @@ static char receive_position(real_client_t *client, char *token)
 #define ud client->event.data.position_end
 static char receive_position_end(real_client_t *client, char *token)
 {
+    UNUSED(token);
     NBEGIN
         /* ignore version */
         CALLBACK(POSITION_END);
@@ -1245,6 +1246,7 @@ static char receive_contract_data_end(real_client_t *client, char *token)
 #define ud client->event.data.open_order_end
 static char receive_open_order_end(real_client_t *client, char *token)
 {
+    UNUSED(token);
     NBEGIN
         /* ignore version */
         CALLBACK(OPEN_ORDER_END);

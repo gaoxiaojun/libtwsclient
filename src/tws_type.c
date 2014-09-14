@@ -302,6 +302,7 @@ void tws_init_order_combo_leg(tr_order_combo_leg_t *ocl)
 
 void tws_destroy_order_combo_leg(tr_order_combo_leg_t *ocl)
 {
+    UNUSED(ocl);
 }
 
 void tws_init_under_comp(under_comp_t *u)
@@ -311,4 +312,5 @@ void tws_init_under_comp(under_comp_t *u)
 
 void tws_destroy_under_comp(under_comp_t *u)
 {
+    UNUSED(u);
 }

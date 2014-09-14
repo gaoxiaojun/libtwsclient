@@ -44,6 +44,15 @@ typedef struct tws_client_s {
     TWS_CLIENT_PUBLIC_FIELDS
 }tws_client_t;
 
+/* TWS API */
+typedef enum {
+    API_LEVEL_SYSTEM  = 1,
+    API_LEVEL_ERROR   = 2,
+    API_LEVEL_WARNING = 3,
+    API_LEVEL_INFORMATION = 4,
+    API_LEVEL_DETAIL = 5
+}API_LOG_LEVEL;
+
 typedef enum {
     FAMT_UNKNOWN  = 0,
     GROUPS        = 1,
@@ -168,25 +177,26 @@ typedef struct _comboleg {
 } tr_comboleg_t;
 
 typedef struct _contract {
-    int            conId;
-    char          *symbol;
-    char          *secType;
-    char          *expiry;
+    int            conId;   /* The unique contract identifier */
+    char          *symbol;  /* This is the symbol of the underlying asset. */
+    char          *secType; /* STK/OPT/FUT/IND/FOP/CASH/BAG/NEWS */
+    char          *expiry;  /* The expiration date. Use the format YYYYMM. */
     double         strike;
     char          *right;
-    char          *multiplier;
-    char          *exchange;
+    char          *multiplier;  /* Allows you to specify a future or option contract multiplier.
+                                   This is only necessary when multiple possibilities exist.*/
+    char          *exchange;    /* The order destination, such as Smart. */
 
     char          *currency;
-    char          *localSymbol;
+    char          *localSymbol;     /* This is the local exchange symbol of the underlying asset.*/
     char          *tradingClass;
     /* pick a non-aggregate (ie not the SMART exchange) exchange that the contract trades on.
      * DO NOT SET TO SMART.*/
-    char          *primaryExch;
+    char          *primaryExch;     /* Identifies the listing exchange for the contract (do not list SMART). */
     bool          includeExpired;   /* can not be set to true for orders.*/
 
-    char          *secIdType;
-    char          *secId;
+    char          *secIdType;   /* SIN/CUSIP/SEDOL/RIC */
+    char          *secId;       /* Unique identifier for the secIdType. */
     // COMBOS
     char          *comboLegsDescrip;  /* received in open order version 14 and up for all combos */
     tr_comboleg_t *comboLegs;
