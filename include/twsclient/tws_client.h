@@ -90,6 +90,7 @@ EXPORT void tws_client_exercise_options(tws_client_t *client, int tickerId,
 
 EXPORT void tws_client_req_account_updates(tws_client_t *client, bool subscribe, const char *acctCode);
 EXPORT void tws_client_req_executions(tws_client_t *client, int reqId, tr_exec_filter_t *filter);
+EXPORT void tws_client_place_order(tws_client_t *c, int id, tr_contract_t *contract, tr_order_t *order);
 EXPORT void tws_client_cancel_order(tws_client_t *client, int id);
 EXPORT void tws_client_req_open_orders(tws_client_t *client);
 EXPORT void tws_client_req_ids(tws_client_t *client, int numIds);

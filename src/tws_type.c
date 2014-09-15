@@ -47,34 +47,77 @@ void tws_init_order(tr_order_t *o)
 {
     memset(o, 0, sizeof * o);
 
+    o->orderId = 0;
+    o->clientId = 0;
+    o->permId = 0;
+
+    o->totalQuantity = 0;
     o->lmtPrice = DBL_MAX;
     o->auxPrice = DBL_MAX;
 
-    o->outsideRth = false;
-    o->openClose = sk_strdup("O");
-    o->origin = CUSTOMER;
+    o->activeStartTime = NULL;
+    o->activeStopTime = NULL;
+    o->ocaType = 0;
     o->transmit = true;
-    o->exemptCode = -1;
+    o->parentId = 0;
+    o->blockOrder = false;
+    o->sweepToFill = false;
+    o->displaySize = 0;
+    o->triggerMethod = 0;
+    o->outsideRth = false;
+    o->hidden = false;
+    o->allOrNone = false;
     o->minQty = INT_MAX;
     o->percentOffset = DBL_MAX;
+    o->overridePercentageConstraints = false;
+    o->trailStopPrice = DBL_MAX;
+    o->trailingPercent = DBL_MAX;
+
+    // institutional (ie non-cleared) only
+
+    o->openClose = strdup("O");
+    o->origin = CUSTOMER;
+    o->shortSaleSlot = 0;
+    o->exemptCode = -1;
+
+    // Smart routing only
+    o->discretionaryAmt = 0;
+    o->eTradeOnly = true;
+    o->firmQuoteOnly = true;
     o->nbboPriceCap = DBL_MAX;
     o->optOutSmartRouting = false;
+
+    // BOX exchange orders only
+    o->auctionStrategy = AUCTION_UNDEFINED;
     o->startingPrice = DBL_MAX;
     o->stockRefPrice = DBL_MAX;
     o->delta = DBL_MAX;
+
+    // pegged to stock and VOL order only
     o->stockRangeLower = DBL_MAX;
     o->stockRangeUpper = DBL_MAX;
+
+    // VOLATILITY ORDERS ONLY
     o->volatility = DBL_MAX;
-    o->volatilityType = INT_MAX;
+    o->volatilityType = INT_MAX;        // 1=daily, 2=annual
+    //o->deltaNeutralOrderType = strdup("");
     o->deltaNeutralAuxPrice = DBL_MAX;
     o->deltaNeutralConId = 0;
+    //o->deltaNeutralSettlingFirm = strdup("");
+    //o->deltaNeutralClearingAccount = strdup("");
+    //o->deltaNeutralClearingIntent = strdup("");
+    o->deltaNeutralOpenClose = strdup("");
     o->deltaNeutralShortSale = false;
     o->deltaNeutralShortSaleSlot = 0;
-    o->referencePriceType = INT_MAX;
-    o->trailStopPrice = DBL_MAX;
-    o->trailingPercent = DBL_MAX;
-    o->basisPoints = DBL_MAX;
-    o->basisPointsType = INT_MAX;
+    //o->deltaNeutralDesignatedLocation = strdup("");
+    o->continuousUpdate = false;
+    o->referencePriceType = INT_MAX;    // 1=Average, 2 = BidOrAsk
+
+    // COMBO ORDERS ONLY
+    o->basisPoints = DBL_MAX;   // EFP Only
+    o->basisPointsType = INT_MAX; // EFP only
+
+    // SCALE ORDERS ONLY
     o->scaleInitLevelSize = INT_MAX;
     o->scaleSubsLevelSize = INT_MAX;
     o->scalePriceIncrement = DBL_MAX;
@@ -85,6 +128,8 @@ void tws_init_order(tr_order_t *o)
     o->scaleInitPosition = INT_MAX;
     o->scaleInitFillQty = INT_MAX;
     o->scaleRandomPercent = false;
+    //o->scaleTable = strdup("");
+
     o->whatIf = false;
     o->notHeld = false;
 }
@@ -296,7 +341,6 @@ void tws_destroy_tag_value(tr_tag_value_t *t)
 
 void tws_init_order_combo_leg(tr_order_combo_leg_t *ocl)
 {
-    memset(ocl, 0, sizeof(*ocl));
     ocl->price = DBL_MAX;
 }
 

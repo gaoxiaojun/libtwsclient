@@ -641,12 +641,12 @@ static char receive_open_order(real_client_t *client, char *token)
                 }
             }
 
-            YIELD; ud.order->comboLegsCount = RINT;
-            if (ud.order->comboLegsCount > 0) {
-                ud.order->comboLegs = (tr_order_combo_leg_t *)sk_calloc (sizeof(tr_order_combo_leg_t),
-                                                                          ud.order->comboLegsCount);
-                for (client->event.j = 0; client->event.j < ud.order->comboLegsCount; client->event.j++) {
-                    YIELD; ud.order->comboLegs[client->event.j].price = RDOUBLEMAX;
+            YIELD; ud.order->orderComboLegsCount = RINT;
+            if (ud.order->orderComboLegsCount > 0) {
+                ud.order->orderComboLegs = (tr_order_combo_leg_t *)sk_calloc (sizeof(tr_order_combo_leg_t),
+                                                                          ud.order->orderComboLegsCount);
+                for (client->event.j = 0; client->event.j < ud.order->orderComboLegsCount; client->event.j++) {
+                    YIELD; ud.order->orderComboLegs[client->event.j].price = RDOUBLEMAX;
                 }
             }
         }

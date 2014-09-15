@@ -180,12 +180,12 @@ static void send_contract_combolegs(real_client_t *client, const tr_contract_t *
 static void send_under_comp(real_client_t *client, const tr_contract_t *contract)
 {
     if (contract->underComp) {
-        send_int32(client, 1);
+        send_bool(client, true);
         send_int32(client, contract->underComp->conId);
         send_double(client, contract->underComp->delta);
         send_double(client, contract->underComp->price);
     } else {
-        send_int32(client, 0);
+        send_bool(client, false);
     }
 }
 
@@ -555,6 +555,7 @@ void tws_client_place_order(tws_client_t *c, int id,
     send_str(client, order->orderRef);
     send_bool(client, order->transmit);
     send_int32(client, order->parentId);
+
     send_bool(client, order->blockOrder);
     send_bool(client, order->sweepToFill);
     send_int32(client, order->displaySize);
@@ -564,9 +565,9 @@ void tws_client_place_order(tws_client_t *c, int id,
 
     if ((contract->secType != 0) && (ascii_strcasecmp(contract->secType, "BAG") == 0)) {
         send_contract_combolegs(client, contract, COMBO_FOR_PLACE_ORDER);
-        send_int32(client, order->comboLegsCount);
-        for (int j = 0; j < order->comboLegsCount; j++) {
-            tr_order_combo_leg_t *leg = &order->comboLegs[j];
+        send_int32(client, order->orderComboLegsCount);
+        for (int j = 0; j < order->orderComboLegsCount; j++) {
+            tr_order_combo_leg_t *leg = &order->orderComboLegs[j];
             send_double_max(client, leg->price);
         }
         send_tag_list(client, order->smartComboRoutingParams, order->smartComboRoutingParamsCount);
@@ -576,6 +577,7 @@ void tws_client_place_order(tws_client_t *c, int id,
     send_double(client, order->discretionaryAmt);
     send_str(client, order->goodAfterTime);
     send_str(client, order->goodTillDate);
+
     send_str(client, order->faGroup);
     send_str(client, order->faMethod);
     send_str(client, order->faPercentage);
@@ -584,7 +586,9 @@ void tws_client_place_order(tws_client_t *c, int id,
     send_int32(client, order->shortSaleSlot);
     send_str(client, order->designatedLocation);
     send_int32(client, order->exemptCode);
+
     send_int32(client, order->ocaType);
+
     send_str(client, order->rule80A);
     send_str(client, order->settlingFirm);
     send_bool(client, order->allOrNone);
@@ -593,33 +597,44 @@ void tws_client_place_order(tws_client_t *c, int id,
     send_bool(client, order->eTradeOnly);
     send_bool(client, order->firmQuoteOnly);
     send_double_max(client, order->nbboPriceCap);
-    send_int32_max(client, order->auctionStrategy);
+    send_int32(client, order->auctionStrategy);
     send_double_max(client, order->startingPrice);
     send_double_max(client, order->stockRefPrice);
     send_double_max(client, order->delta);
     send_double_max(client, order->stockRangeLower);
     send_double_max(client, order->stockRangeUpper);
+
     send_bool(client, order->overridePercentageConstraints);
+
     send_double_max(client, order->volatility);
     send_int32_max(client, order->volatilityType);
+
     send_str(client, order->deltaNeutralOrderType);
     send_double_max(client, order->deltaNeutralAuxPrice);
+
     if (!IS_EMPTY(order->deltaNeutralOrderType)) {
         send_int32(client, order->deltaNeutralConId);
         send_str(client, order->deltaNeutralSettlingFirm);
         send_str(client, order->deltaNeutralClearingAccount);
         send_str(client, order->deltaNeutralClearingIntent);
+
         send_str(client, order->deltaNeutralOpenClose);
         send_int32(client, order->deltaNeutralShortSale);
         send_int32(client, order->deltaNeutralShortSaleSlot);
         send_str(client, order->deltaNeutralDesignatedLocation);
     }
+
     send_bool(client, order->continuousUpdate);
+
     send_int32_max(client, order->referencePriceType);
+
     send_double_max(client, order->trailStopPrice);
+
     send_double_max(client, order->trailingPercent);
+
     send_int32_max(client, order->scaleInitLevelSize);
     send_int32_max(client, order->scaleSubsLevelSize);
+
     send_double_max(client, order->scalePriceIncrement);
 
     if (order->scalePriceIncrement > 0.0 && order->scalePriceIncrement != DBL_MAX) {
@@ -657,8 +672,7 @@ void tws_client_place_order(tws_client_t *c, int id,
 
     send_bool(client, order->whatIf);
 
-    if (order->orderMiscOptions)
-                send_options_list(client, order->orderMiscOptions, order->orderMiscOptionsCount);
+    send_options_list(client, order->orderMiscOptions, order->orderMiscOptionsCount);
 
     flush_buf(client);
 }
@@ -688,7 +702,7 @@ void tws_client_req_executions(tws_client_t *c, int reqId, tr_exec_filter_t *fil
     send_int32(client, filter->clientId);
     send_str(client, filter->acctCode);
 
-            /* Note that the valid format for m_time is "yyyymmdd-hh:mm:ss" */
+    /* Note that the valid format for m_time is "yyyymmdd-hh:mm:ss" */
     send_str(client, filter->time);
     send_str(client, filter->symbol);
     send_str(client, filter->secType);

@@ -259,12 +259,12 @@ static void tws_cb_print_contract_details(const tr_contract_details_t *cd)
 
 static void tws_cb_print_order(const tr_order_t *order)
 {
-    tws_cb_printf(1, "ORDER: discretionary_amt=%g, lmt_price=%g, aux_price=%g, percent_offset=%g, nbbo_price_cap=%g, starting_price=%g, stock_ref_price=%g, delta=%g, stock_range_lower=%g, stock_range_upper=%g, volatility=%g, delta_neutral_aux_price=%g, trail_stop_price=%g, trailing_percent=%g, basis_points=%g, scale_price_increment=%g, scale_price_adjust_value=%g, scale_profit_offset=%g\n",
+    tws_cb_printf(1, "ORDER: discretionary_amt=%g, lmt_price=%g, aux_price=%g, percent_offset=%g, nbbo_price_cap=%g, starting_price=%g, stock_ref_price=%g, delta=%g, stock_range_lower=%g, stock_range_upper=%g, volatility=%g, delta_neutral_aux_price=%g, trail_stop_price=%g, trailing_percent=%g, basis_points=%g, scale_price_increment=%g, scale_price_adjust_value=%g, scale_profit_offset=%g order_ref=%s\n",
                   order->discretionaryAmt, order->lmtPrice, order->auxPrice, order->percentOffset,
                   order->nbboPriceCap, order->startingPrice, order->stockRefPrice, order->delta,
                   order->stockRangeLower, order->stockRangeUpper, order->volatility, order->deltaNeutralAuxPrice,
                   order->trailStopPrice, order->trailingPercent, order->basisPoints, order->scalePriceIncrement,
-                  order->scalePriceAdjustValue, order->scaleProfitOffset);
+                  order->scalePriceAdjustValue, order->scaleProfitOffset, order->orderRef);
 
     tws_cb_printf(2, "algo_strategy=[%s], good_after_time=[%s], good_till_date=[%s], fagroup=[%s], famethod=[%s], fapercentage=[%s], faprofile=[%s], action=[%s], order_type=[%s], tif=[%s], oca_group=[%s], account=[%s], open_close=[%s], orderref=[%s], designated_location=[%s], rule80a=[%s], settling_firm=[%s], delta_neutral_order_type=[%s], clearing_account=[%s], clearing_intent=[%s], hedge_type=[%s], hedge_param=[%s], delta_neutral_settling_firm=[%s], delta_neutral_clearing_account=[%s], delta_neutral_clearing_intent=[%s]\n",
                   order->algoStrategy, order->goodAfterTime, order->goodTillDate, order->faGroup,
@@ -280,7 +280,7 @@ static void tws_cb_print_order(const tr_order_t *order)
     tws_cb_printf(2, "Smart combo routing params:\n");
     tws_cb_print_tag_value_set(3, order->smartComboRoutingParamsCount, order->smartComboRoutingParams);
 
-    tws_cb_print_order_combolegs(2, order->comboLegsCount, order->comboLegs);
+    tws_cb_print_order_combolegs(2, order->orderComboLegsCount, order->orderComboLegs);
 
     tws_cb_printf(2, "o_orderid=%d, total_quantity=%d, origin=%d (%s), clientid=%d, permid=%d, parentid=%d, display_size=%d, trigger_method=%d, min_qty=%d, volatility_type=%d, reference_price_type=%d, basis_points_type=%d, scale_subs_level_size=%d, scale_init_level_size=%d, scale_price_adjust_interval=%d, scale_init_position=%d, scale_init_fill_qty=%d, exempt_code=%d, delta_neutral_con_id=%d, oca_type=%d (%s), auction_strategy=%d (%s)"
                   ", short_sale_slot=%d, override_percentage_constraints=%d, firm_quote_only=%d, etrade_only=%d, all_or_none=%d, outside_rth=%d, hidden=%d, transmit=%d, block_order=%d, sweep_to_fill=%d, continuous_update=%d, whatif=%d, not_held=%d, opt_out_smart_routing=%d, scale_auto_reset=%d, scale_random_percent=%d\n",
@@ -327,23 +327,24 @@ void on_client_connected(tws_client_t *client)
 
     contract.currency = strdup("USD");
     contract.symbol = strdup("EUR");
+    //contract.localSymbol = strdup("EUR.USD");
     contract.secType = strdup("CASH");
     contract.exchange = strdup("IDEALPRO");
-
-    tws_client_req_managed_accts(client);
-    tws_client_req_mkt_data(client, 1, &contract, "", 0, NULL, 0);
-    tws_client_req_contract_details(client, 200, &contract);
-    tws_client_req_fundamenta_data(client, 300, &contract, "ReportsFinSummary");
-    tws_client_req_account_updates(client, true, NULL);
+    //contract.conId = 12087792;
+    //tws_client_req_managed_accts(client);
+    //tws_client_req_mkt_data(client, 1, &contract, "165,232,233,293,294,295,318", 0, NULL, 0);
+    //tws_client_req_contract_details(client, 200, &contract);
+    //tws_client_req_fundamenta_data(client, 300, &contract, "ReportsFinSummary");
+    //tws_client_req_account_updates(client, true, NULL);
     tws_client_req_all_open_orders(client);
     tws_client_req_current_time(client);
-    tws_client_req_news_bulletins(client, true);
-    tws_client_req_realtime_bars(client, 2, &contract, 5, "ASK", 1, NULL, 0);
-    tws_client_req_realtime_bars(client, 3, &contract, 5, "BID", 1, NULL, 0);
-    tws_client_req_mkt_depth(client, 4, &contract, 10, NULL, 0);
+    //tws_client_req_news_bulletins(client, true);
+    //tws_client_req_realtime_bars(client, 2, &contract, 5, "ASK", 1, NULL, 0);
+    //tws_client_req_realtime_bars(client, 3, &contract, 5, "BID", 1, NULL, 0);
+    //tws_client_req_mkt_depth(client, 4, &contract, 10, NULL, 0);
     tws_client_set_server_loglevel(client, 5);
     tws_client_req_positions(client);
-
+    //tws_client_req_historical_data(client, 500, &contract, "20140911 9:00:00 CST", "3600 S", "1 min", "MIDPOINT", true, 1, NULL, 0);
     tws_destroy_contract(&contract);
 }
 
@@ -355,8 +356,8 @@ void on_client_disconnected(tws_client_t *client)
 
 void dbg_event_tick_price(event_tick_price_t *ud)
 {
-    printf("tickPrice:id=%d, type=%d, price=%f, size=%d, canAuto=%d\n",
-           ud->tickerId, ud->tickType, ud->price, ud->size, ud->canAutoExecute);
+    printf("tickPrice:id=%d, type=%d(%s), price=%f, size=%d, canAuto=%d\n",
+           ud->tickerId, ud->tickType, tick_type_name(ud->tickType), ud->price, ud->size, ud->canAutoExecute);
 }
 
 static void dbg_event_tick_size(event_tick_size_t *ud)
@@ -433,9 +434,30 @@ static void dbg_event_update_account_time(event_acct_update_time_t *ud)
     tws_cb_printf(0, "update_account_time: time_stamp=[%s]\n", ud->timeStamp);
 }
 
-static void dbg_event_next_valid_id(event_next_valid_id_t *ud)
+static void dbg_event_next_valid_id(tws_client_t *client, event_next_valid_id_t *ud)
 {
+    int id = ud->orderId;
     tws_cb_printf(0, "next_valid_id for order placement %d\n", ud->orderId);
+    tr_contract_t contract;
+    tws_init_contract(&contract);
+
+    contract.symbol = strdup("EUR");
+    contract.secType = strdup("CASH");
+    contract.exchange = strdup("IDEALPRO");
+    contract.currency = strdup("USD");
+
+    tr_order_t order;
+    tws_init_order(&order);
+
+    order.action = strdup("BUY");
+    order.totalQuantity = 50000;
+    order.orderType = strdup("MKT");
+
+    tws_client_place_order(client, id, &contract, &order);
+    tws_destroy_contract(&contract);
+    tws_destroy_order(&order);
+    tws_cb_printf(0, "send order\n");
+    //tws_client_req_executions(client, 10, NULL);
 }
 
 static void dbg_event_contract_details(event_contract_data_t *ud)
@@ -493,6 +515,12 @@ static void dbg_event_receive_fa(event_receive_fa_t *ud)
 
 static void dbg_event_historical_data(event_historical_data_t *ud)
 {
+    tws_cb_printf(0, "historical: req_id=%d, start= %s end = %s count =%d\n", ud->reqId, ud->startDateStr, ud->endDateStr, ud->itemCount);
+    for (int i = 0; i < ud->itemCount; i++) {
+        tws_cb_printf(1, "barCount=%d, date=%s, ohlc=%.4g/%.4g/%.4g/%.4g volume=%d, wap=%.4g hasGaps=%d\n",
+                      ud->items[i].barCount, ud->items[i].date, ud->items[i].open, ud->items[i].high, ud->items[i].low,
+                      ud->items[i].close, ud->items[i].volume, ud->items[i].WAP, ud->items[i].hasGaps);
+    }
     /*tws_cb_printf(0, "historical: req_id=%d, date=%s, ohlc=%.4g/%.4g/%.4g/%.4g, volume=%ld, bar_count=%d, wap=%.4g, has_gaps=%d\n",
                   req_id, date, open, high, low, close, volume, bar_count, wap, has_gaps);*/
 }
@@ -504,6 +532,7 @@ static void dbg_event_scanner_parameters(event_scanner_parameters_t *ud)
 
 static void dbg_event_scanner_data(event_scanner_data_t *ud)
 {
+    (void)(ud);
     /*tws_cb_printf(0, "scanner_data: ticker_id=%d, rank=%d, distance=[%s], benchmark=[%s], projection=[%s], legs_str=[%s]\n",
                   ud->tickerId, rank, distance, benchmark, projection, legs_str);
     tws_cb_print_contract_details(cd);*/
@@ -537,6 +566,7 @@ static void dbg_event_contract_details_end(event_contract_data_end_t *ud)
 
 static void dbg_event_open_order_end(void *p)
 {
+    (void)(p);
     tws_cb_printf(0, "open_order_end\n");
 }
 
@@ -583,6 +613,7 @@ static void dbg_event_position(event_position_t *ud)
 
 static void dbg_event_position_end(void *p)
 {
+    (void)(p);
     tws_cb_printf(0, "position_end\n");
 }
 
@@ -677,7 +708,7 @@ void tws_debug(tws_client_t *client, int event_type, void *ud)
         dbg_event_open_order(ud);
         break;
     case NEXT_VALID_ID:
-        dbg_event_next_valid_id(ud);
+        dbg_event_next_valid_id(client, ud);
         break;
     case SCANNER_DATA:
         dbg_event_scanner_data(ud);

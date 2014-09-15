@@ -70,6 +70,7 @@ int main(int argc, char **argv)
     tws_client_enable_reconnect(client, 2, 6);
 
     client->logger = debug_logger;
+    client->clientId = 1;
 
     err = tws_client_connect(client, host, port);
     if (err)

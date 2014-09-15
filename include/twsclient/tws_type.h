@@ -384,8 +384,8 @@ typedef struct _order {
     int      smartComboRoutingParamsCount;
 
     // order combo legs
-    tr_order_combo_leg_t *comboLegs;
-    int      comboLegsCount;
+    tr_order_combo_leg_t *orderComboLegs;
+    int      orderComboLegsCount;
     // order misc options
     tr_tag_value_t *orderMiscOptions;
     int orderMiscOptionsCount;
