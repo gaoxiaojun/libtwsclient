@@ -319,7 +319,6 @@ typedef struct event_market_data_type_t {
 }event_market_data_type_t;
 
 typedef struct event_commission_report_t {
-    int reqId;
     tr_commission_report_t report;
 }event_commission_report_t;
 

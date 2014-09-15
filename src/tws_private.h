@@ -60,6 +60,9 @@ typedef struct real_client_s {
     struct pt pt;   /* coroutine status */
     char *p;        /* current parser position */
     int cmd;        /* current decoding cmd */
+#ifndef NDEBUG
+    char *packet;   /* point to whole packet */
+#endif
 }real_client_t;
 
 typedef void (*tws_client_generical_cb)(real_client_t *client);

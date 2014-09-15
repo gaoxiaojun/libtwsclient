@@ -433,10 +433,36 @@ static void dbg_event_update_account_time(event_acct_update_time_t *ud)
 {
     tws_cb_printf(0, "update_account_time: time_stamp=[%s]\n", ud->timeStamp);
 }
+static int orderId = 0;
+
+static void on_timer(uv_timer_t* handle)
+{
+    tws_client_t *client = handle->data;
+    free(handle);
+    tr_contract_t contract;
+    tws_init_contract(&contract);
+
+    contract.symbol = strdup("EUR");
+    contract.secType = strdup("CASH");
+    contract.exchange = strdup("IDEALPRO");
+    contract.currency = strdup("USD");
+
+    tr_order_t order;
+    tws_init_order(&order);
+
+    order.action = strdup("SELL");
+    order.totalQuantity = 50000;
+    order.orderType = strdup("MKT");
+
+    tws_client_place_order(client, orderId++, &contract, &order);
+    tws_destroy_contract(&contract);
+    tws_destroy_order(&order);
+    tws_cb_printf(0, "send sell order\n");
+}
 
 static void dbg_event_next_valid_id(tws_client_t *client, event_next_valid_id_t *ud)
 {
-    int id = ud->orderId;
+    orderId = ud->orderId;
     tws_cb_printf(0, "next_valid_id for order placement %d\n", ud->orderId);
     tr_contract_t contract;
     tws_init_contract(&contract);
@@ -453,11 +479,14 @@ static void dbg_event_next_valid_id(tws_client_t *client, event_next_valid_id_t 
     order.totalQuantity = 50000;
     order.orderType = strdup("MKT");
 
-    tws_client_place_order(client, id, &contract, &order);
+    tws_client_place_order(client, orderId++, &contract, &order);
     tws_destroy_contract(&contract);
     tws_destroy_order(&order);
-    tws_cb_printf(0, "send order\n");
-    //tws_client_req_executions(client, 10, NULL);
+    tws_cb_printf(0, "send buy order\n");
+    uv_timer_t *timer = malloc(sizeof(uv_timer_t));
+    uv_timer_init(uv_default_loop(), timer);
+    timer->data = client;
+    uv_timer_start(timer, on_timer, 50000, 0);
 }
 
 static void dbg_event_contract_details(event_contract_data_t *ud)
@@ -600,7 +629,6 @@ static void dbg_event_market_data_type(event_market_data_type_t *ud)
 
 static void dbg_event_commission_report(event_commission_report_t *ud)
 {
-    tws_cb_printf(0, "commission_report: ...reqId=%d\n", ud->reqId);
     tws_cb_print_commission_report(&ud->report);
 }
 

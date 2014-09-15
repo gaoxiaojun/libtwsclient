@@ -1325,7 +1325,6 @@ static char receive_commission_report(real_client_t *client, char *token)
 {
     PBEGIN;
         /* ignore version */
-        YIELD; ud.reqId = RINT;
         YIELD; ud.report.execId = RSTRING;
         YIELD; ud.report.commission = RDOUBLE;
         YIELD; ud.report.currency = RSTRING;
@@ -1414,6 +1413,9 @@ static void decode_response_package(real_client_t *client, char *token)
     switch (client->cmd) {
     case 0:
         client->cmd = atoi(token);
+#ifndef NDEBUG
+        client->packet = token;
+#endif
         break;
     case TICK_PRICE:
         pt_value = receive_tick_price(client, token);
@@ -1552,6 +1554,10 @@ static void decode_response_package(real_client_t *client, char *token)
     /* pt_value == PT_ENDED means the packet decode finished, so we wait for next commnad */
     if (PT_ENDED == pt_value) {
         client->cmd = 0;
+#ifndef NDEBUG
+        hexdump("[[", client->packet, client->p - client->packet);
+        client->packet = client->p;
+#endif
     }
 }
 
