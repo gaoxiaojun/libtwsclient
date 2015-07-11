@@ -14,6 +14,7 @@ extern "C" {
 #include <twsclient/tws_client.h>
 
 #define CLIENT_VERSION          63
+#define SERVER_VERSION          38
 
 #define MIN_SERVER_VER_LINKING  70
 #define MIN_REQ_SERVER_VERSION  MIN_SERVER_VER_LINKING
