@@ -1,5 +1,7 @@
 ### /.gitignore-boilerplates/C.gitignore
 
+client/
+
 # Object files
 *.o
 
