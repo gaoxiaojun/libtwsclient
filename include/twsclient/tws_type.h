@@ -64,6 +64,8 @@ typedef enum {
     MDT_UNKNOWN = 0,
     REALTIME    = 1,
     FROZEN      = 2,
+    DELAYED     = 3,
+    DELAYED_FROZEN = 4
 } market_data_type_t;
 
 typedef enum {
@@ -161,7 +163,7 @@ typedef struct _under_comp {
     int    conId;
     double delta;
     double price;
-} under_comp_t;
+} tr_under_comp_t;
 
 typedef struct _comboleg {
     int   conId;
@@ -203,7 +205,7 @@ typedef struct _contract {
     int           comboLegsCount;
 
     // delta neutral
-    under_comp_t  *underComp;
+    tr_under_comp_t  *underComp;
 } tr_contract_t;
 
 typedef struct tr_tag_value {
@@ -484,8 +486,8 @@ EXPORT void tws_destroy_tag_value(tr_tag_value_t *t);
 EXPORT void tws_init_order_combo_leg(tr_order_combo_leg_t *ocl);
 EXPORT void tws_destroy_order_combo_leg(tr_order_combo_leg_t *ocl);
 
-EXPORT void tws_init_under_comp(under_comp_t *u);
-EXPORT void tws_destroy_under_comp(under_comp_t *u);
+EXPORT void tws_init_under_comp(tr_under_comp_t *u);
+EXPORT void tws_destroy_under_comp(tr_under_comp_t *u);
 
 EXPORT void tws_init_order(tr_order_t *o);
 EXPORT void tws_destroy_order(tr_order_t *o);

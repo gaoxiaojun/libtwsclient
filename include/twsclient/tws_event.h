@@ -306,7 +306,7 @@ typedef struct event_execution_data_end_t {
 
 typedef struct event_delta_neutral_validation_t {
     int reqId;
-    under_comp_t underComp;
+    tr_under_comp_t underComp;
 }event_delta_neutral_validation_t;
 
 typedef struct event_tick_snapshot_end_t {

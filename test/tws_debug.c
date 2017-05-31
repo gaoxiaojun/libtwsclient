@@ -180,7 +180,7 @@ void tws_cb_printf(int indent_level, const char *msg, ...)
     va_end(ap);
 }
 
-static void tws_cb_print_under_comp(int indent_level, const under_comp_t *und)
+static void tws_cb_print_under_comp(int indent_level, const tr_under_comp_t *und)
 {
     tws_cb_printf(indent_level, "UNDER_COMP: price=%g, delta=%g, conId=%d\n",
                   und->price, und->delta, und->conId);

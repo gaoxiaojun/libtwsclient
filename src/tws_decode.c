@@ -706,7 +706,7 @@ static char receive_open_order(real_client_t *client, char *token)
 
         if (client->event.version >= 20) {
             YIELD; if (RBOOL) {
-                ud.contract->underComp = sk_malloc(sizeof(under_comp_t));
+                ud.contract->underComp = sk_malloc(sizeof(tr_under_comp_t));
                 YIELD; ud.contract->underComp->conId = RINT;
                 YIELD; ud.contract->underComp->delta = RDOUBLE;
                 YIELD; ud.contract->underComp->price = RDOUBLE;
